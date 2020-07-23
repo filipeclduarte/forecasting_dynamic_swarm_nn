@@ -1,4 +1,6 @@
 # Funções úteis 
+import pandas as pd
+import numpy as np
 
 # Funções essenciais para a organização dos dados
 def normalizar_serie(serie):
