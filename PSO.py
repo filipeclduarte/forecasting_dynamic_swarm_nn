@@ -56,20 +56,24 @@ def PSO(fun, *args, qtd_particulas, atributos_dim, min, max, seed = np.random.se
             if fun(particulas[j,:]) < fun(pbest[j,:]):
                 pbest[j,:] = particulas[j,:]
 
-                if fun(particulas[j,:]) < fun(particulas[gbest, :]):
-                    gbest = j
-                    gbest_value = fun(particulas[gbest, :])
-                    #print('--------------------------------------')
-                    #print('gbest:', gbest)
-                    #print('Valor da função no gbest:', gbest_value)
-                    #print('--------------------------------------')
-
+            if fun(particulas[j,:]) < fun(particulas[gbest, :]):
+                gbest = j
+                gbest_value = fun(particulas[gbest, :])
+            
             # Iteração para atualizar as posições das partículas
-            for i in np.arange(qtd_particulas):
-                r1, r2 = np.random.rand(), np.random.rand()
-                velocidade[i, :] = w * velocidade[i, :] + c1 * r1 * (pbest[i, :] - particulas[i, :]) + c2 * r2 * (particulas[gbest, :] - particulas[i, :])
-                particulas[i, :] = particulas[i, :] + velocidade[i, :]
-        
+        for i in np.arange(qtd_particulas):
+            r1, r2 = np.random.rand(), np.random.rand()
+            velocidade[i, :] = w * velocidade[i, :] + c1 * r1 * (pbest[i, :] - particulas[i, :]) + c2 * r2 * (particulas[gbest, :] - particulas[i, :])
+            particulas[i, :] = particulas[i, :] + velocidade[i, :]
+
+            # garantir os limites
+            for d in np.arange(atributos_dim):
+                if particulas[i, d] < min:
+                    particiulas[i, d] = min
+                elif particulas[i, d] > max:
+                    particulas[i, d] = max
+
+
         funcao_iteracao[k] = fun(particulas[gbest, :])
 
         vetor_fitness = np.zeros(qtd_particulas)
@@ -81,3 +85,5 @@ def PSO(fun, *args, qtd_particulas, atributos_dim, min, max, seed = np.random.se
         desvio_pad[k] = vetor_fitness.std()
 
     return particulas, gbest, funcao_iteracao, media, desvio_pad
+
+
