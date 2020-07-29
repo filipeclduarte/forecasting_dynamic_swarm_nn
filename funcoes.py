@@ -6,9 +6,11 @@ import numpy as np
 def normalizar_serie(serie):
     minimo = np.min(serie)
     maximo = np.max(serie)
+    print('maximo', maximo)
     y_temp = 2*((serie - minimo) / (maximo - minimo)) - 1
     print('y_temp:', y_temp)
     y = y_temp / np.sqrt(len(serie))
+
     return y
 
 def desnormalizar(serie_atual, serie_real):
