@@ -6,7 +6,9 @@ import numpy as np
 def normalizar_serie(serie):
     minimo = np.min(serie)
     maximo = np.max(serie)
-    y = 2*((serie - minimo) / (maximo - minimo)) - 1
+    y_temp = 2*((serie - minimo) / (maximo - minimo)) - 1
+    print('y_temp:', y_temp)
+    y = y_temp / np.sqrt(len(serie))
     return y
 
 def desnormalizar(serie_atual, serie_real):
@@ -15,6 +17,7 @@ def desnormalizar(serie_atual, serie_real):
     
     serie = ((serie_atual + 1)/2)*(maximo - minimo) + maximo
     
+    serie = serie * np.sqrt(len(serie_atual))
     return pd.DataFrame(serie)
 
 # split a univariate sequence into samples
