@@ -4,23 +4,23 @@ import numpy as np
 
 # Funções essenciais para a organização dos dados
 def normalizar_serie(serie):
-    minimo = min(serie)
-    maximo = max(serie)
-    y = (serie - minimo) / (maximo - minimo)
+    minimo = np.min(serie)
+    maximo = np.max(serie)
+    y = 2*((serie - minimo) / (maximo - minimo)) - 1
     return y
 
 def desnormalizar(serie_atual, serie_real):
-    minimo = min(serie_real)
-    maximo = max(serie_real)
+    minimo = np.min(serie_real)
+    maximo = np.max(serie_real)
     
-    serie = (serie_atual * (maximo - minimo)) + minimo
+    serie = ((serie_atual + 1)/2)*(maximo - minimo)) + maximo
     
     return pd.DataFrame(serie)
 
 # split a univariate sequence into samples
 def split_sequence(sequence, n_steps_in, n_steps_out):
     X, y = list(), list()
-    for i in range(len(sequence)):
+    for i in np.arange(len(sequence)):
         # find the end of this pattern
         end_ix = i + n_steps_in
         out_end_ix = end_ix + n_steps_out
