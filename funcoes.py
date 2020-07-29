@@ -13,7 +13,7 @@ def desnormalizar(serie_atual, serie_real):
     minimo = np.min(serie_real)
     maximo = np.max(serie_real)
     
-    serie = ((serie_atual + 1)/2)*(maximo - minimo)) + maximo
+    serie = ((serie_atual + 1)/2)*(maximo - minimo) + maximo
     
     return pd.DataFrame(serie)
 
