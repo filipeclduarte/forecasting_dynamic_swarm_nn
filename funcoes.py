@@ -15,10 +15,11 @@ def desnormalizar(serie_atual, serie_real):
     minimo = np.min(serie_real)
     maximo = np.max(serie_real)
     
-    serie = ((serie_atual + 1)/2)*(maximo - minimo) + maximo
+    serie_temp = serie_atual * np.sqrt(len(serie_atual))
+    serie_temp2 = (serie_temp + 1)/2
+    serie_temp3 = serie_temp2 * (maximo - minimo) + minimo 
     
-    serie = serie * np.sqrt(len(serie_atual))
-    return pd.DataFrame(serie)
+    return pd.DataFrame(serie_temp3)
 
 # split a univariate sequence into samples
 def split_sequence(sequence, n_steps_in, n_steps_out):
