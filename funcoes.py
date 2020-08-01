@@ -15,7 +15,7 @@ def desnormalizar(serie_atual, serie_real):
     minimo = np.min(serie_real)
     maximo = np.max(serie_real)
     
-    serie_temp = serie_atual * np.sqrt(len(serie_atual))
+    serie_temp = serie_atual * np.sqrt(len(serie_real))
     serie_temp2 = (serie_temp + 1)/2
     serie_temp3 = serie_temp2 * (maximo - minimo) + minimo 
     
