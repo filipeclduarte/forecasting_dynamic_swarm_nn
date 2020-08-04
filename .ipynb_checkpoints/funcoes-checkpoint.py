@@ -83,7 +83,7 @@ def cenarios_dinamicos(serie, window_size, step_size):
     
     cenarios = []
     
-    i_max = int((t - w)/s)
+    i_max = int(np.floor((t - w)/s))
     
     for i in range(i_max+1):
         s_temp = serie.iloc[(i*s):((i*s)+w)]
