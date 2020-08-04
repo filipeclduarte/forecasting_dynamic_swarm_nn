@@ -79,12 +79,14 @@ def cenarios_dinamicos(serie, window_size, step_size):
     '''
     w = window_size
     s = step_size
+    t = len(serie)
+    
     cenarios = []
     
     i_max = int((t - w)/s)
     
     for i in range(i_max+1):
-        s_temp = serie.iloc[(i*s):((i*s)+w),:]
+        s_temp = serie.iloc[(i*s):((i*s)+w)]
         cenarios.append(s_temp)
         
     return cenarios
