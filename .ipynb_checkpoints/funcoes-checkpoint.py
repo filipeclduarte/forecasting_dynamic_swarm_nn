@@ -90,3 +90,16 @@ def cenarios_dinamicos(serie, window_size, step_size):
         cenarios.append(s_temp)
         
     return cenarios
+
+# Performance metric
+def cmf(lista_mse, T):
+    '''
+    Argumentos:
+    lista_mse -> lista contendo os valores do mse (fitness) para cada iteração (t).
+    T -> número total de iterações. 
+    
+    Retorna:
+    CMF -> Métrica de desempenho dos algoritmos para todas as iterações
+    '''
+    return 1/T * sum(lista_mse)
+    
