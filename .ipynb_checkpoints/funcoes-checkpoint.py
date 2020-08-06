@@ -101,5 +101,10 @@ def cmf(lista_mse, T):
     Retorna:
     CMF -> Métrica de desempenho dos algoritmos para todas as iterações
     '''
-    return 1/T * sum(lista_mse)
+    lista_mse = np.array(lista_mse)
+    return 1/T * lista_mse.sum()
+
+# generalization factor 
+def gf(cmf_treino, cmf_teste):
     
+    return cmf_teste/cmf_treino
