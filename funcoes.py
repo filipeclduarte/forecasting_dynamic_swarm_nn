@@ -47,17 +47,17 @@ def divisao_dados_temporais(X,y, perc_treino, perc_val = 0):
         X_treino = X[0:tam_treino,:]
         y_treino = y[0:tam_treino,:]
         
-        print("Particao de Treinamento:", 0, tam_treino)
+        #print("Particao de Treinamento:", 0, tam_treino)
         
         X_val = X[tam_treino:tam_treino+tam_val,:]
         y_val = y[tam_treino:tam_treino+tam_val,:]
         
-        print("Particao de Validacao:",tam_treino,tam_treino+tam_val)
+        #print("Particao de Validacao:",tam_treino,tam_treino+tam_val)
         
         X_teste = X[(tam_treino+tam_val):-1,:]
         y_teste = y[(tam_treino+tam_val):-1,:]
         
-        print("Particao de Teste:", tam_treino+tam_val, len(y))
+        #print("Particao de Teste:", tam_treino+tam_val, len(y))
         
         return X_treino, y_treino, X_teste, y_teste, X_val, y_val
         
