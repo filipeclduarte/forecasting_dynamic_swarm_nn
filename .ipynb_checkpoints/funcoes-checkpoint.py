@@ -94,8 +94,8 @@ def cenarios_dinamicos(serie, window_size, step_size):
 # Criando cenários
 def cenarios_execucoes(X, y, w, s, f, modelo, qtd_execucoes = 30):
     
-    X_I = cenarios_dinamicos(X, 60, 10)
-    y_I = cenarios_dinamicos(y, 60, 10)
+    X_I = cenarios_dinamicos(X, w, s)
+    y_I = cenarios_dinamicos(y, w, s)
 
     mse_treino = np.zeros((qtd_execucoes, len(y_I)))
     mse_teste = np.zeros((qtd_execucoes, len(y_I)))
