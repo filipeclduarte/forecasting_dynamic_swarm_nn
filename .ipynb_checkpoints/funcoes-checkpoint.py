@@ -91,20 +91,104 @@ def cenarios_dinamicos(serie, window_size, step_size):
         
     return cenarios
 
-# Performance metric
-def cmf(lista_mse, T):
-    '''
-    Argumentos:
-    lista_mse -> lista contendo os valores do mse (fitness) para cada iteração (t).
-    T -> número total de iterações. 
+# Criando cenários
+def cenarios_execucoes(X, y, w, s, f, modelo, qtd_execucoes = 30):
     
-    Retorna:
-    CMF -> Métrica de desempenho dos algoritmos para todas as iterações
-    '''
-    lista_mse = np.array(lista_mse)
-    return 1/T * lista_mse.sum()
+    X_I = cenarios_dinamicos(X, 60, 10)
+    y_I = cenarios_dinamicos(y, 60, 10)
 
-# generalization factor 
-def gf(cmf_treino, cmf_teste):
+    mse_treino = np.zeros((qtd_execucoes, len(y_I)))
+    mse_teste = np.zeros((qtd_execucoes, len(y_I)))
+
+    execucoes = np.arange(qtd_execucoes)
+
+    for execucao in execucoes:
+
+        print('Execução: ', execucao)
     
-    return cmf_teste/cmf_treino
+        # Janelamento
+        for i in np.arange(len(y_I)):
+            print('Janela: ', i)
+            ## Divisão em treinamento e teste
+            X_treino, y_treino, X_teste, y_teste, X_validacao, y_validacao = divisao_dados_temporais(X_I[i], y_I[i], perc_treino=.56, perc_val = .24)
+    
+            ### Treinar rede neural com backprop
+            # setando parâmetros para comparação
+            best_model = 0
+            best_mse = np.inf
+
+            # quantidade de neurônios de 2 até 25
+            neuronios = np.arange(2, 26)
+    
+            # grid search 
+            for j in neuronios:
+                print('Neurônios: ', j)
+        
+                # treinar NN para f iterações
+                parameters = modelo(X_treino.T, y_treino.T, n_h = j, num_iteracoes = f)
+        
+                # predição na validação
+                y_pred_val = predict2(parameters, X_validacao.T)
+                mse_validacao = compute_cost2(y_pred_val, y_validacao.T, parameters)
+        
+                if mse_validacao < best_mse:
+                    best_model = parameters 
+                    best_mse = mse_validacao
+                    #print('Melhor MSE: ', best_mse)
+                    qtd_neuronios = j
+                
+            # retreinar e retestar com a melhor topologia 
+            X_treino_temp = np.vstack((X_treino, X_validacao))
+            y_treino_temp = np.vstack((y_treino, y_validacao))
+            
+            y_pred_treino = predict2(best_model, X_treino_temp.T)
+            mse_treino_temp = compute_cost2(y_pred_treino, y_treino_temp.T, best_model)
+            mse_treino[execucao,i] = mse_treino_temp
+        
+            y_pred_teste = predict2(best_model, X_teste.T)
+            mse_teste_temp = compute_cost2(y_pred_teste, y_teste.T, best_model)
+            mse_teste[execucao,i] = mse_teste_temp
+
+    return mse_treino, mse_teste
+
+## Criando avaliação dos resultados
+def avaliacao_resultados(mse_treino, mse_teste):
+    
+    # quantidade de janelas
+    ### Garantindo que a quantidade de janelas é igual
+    assert mse_treino.shape[1] == mse_teste.shape[1]
+    
+    qtd_janelas = mse_treino.shape[1]
+    
+    # Calculando CMF
+    te = mse_treino.sum(axis=1)/qtd_janelas
+    ge = mse_teste.sum(axis=1)/qtd_janelas
+
+    # calcular a métrica fator de generalização
+    gf = ge/te
+
+    # Média e desvio padrão
+    te_medio = te.mean()
+    te_std = te.std()
+
+    ge_medio = ge.mean()
+    ge_std = ge.std()
+
+    gf_medio = gf.mean()
+    gf_std = gf.std()
+
+    print('TE medio: ', te_medio)
+    print('TE desvio: ', te_std)
+    print('GE medio: ', ge_medio)
+    print('GE desvio: ', ge_std)
+    print('GF medio: ', gf_medio)
+    print('GF desvio: ', gf_std)
+    
+    resultados = {'TE medio': te_medio,
+    'TE desvio': te_std,
+    'GE medio': ge_medio,
+    'GE desvio':ge_std,
+    'GF medio':gf_medio,
+    'GF desvio':gf_std}
+    
+    return resultados
