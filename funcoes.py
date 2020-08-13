@@ -85,7 +85,7 @@ def cenarios_dinamicos(serie, window_size, step_size):
     
     i_max = int(np.floor((t - w)/s))
     
-    for i in range(i_max+1):
+    for i in range(i_max):
         s_temp = serie[(i*s):((i*s)+w)]
         cenarios.append(s_temp)
         
@@ -94,19 +94,26 @@ def cenarios_dinamicos(serie, window_size, step_size):
 # Criando cenários
 def cenarios_execucoes(X, y, w, s, f, modelo, qtd_execucoes = 30):
     
+    # gerando os cenários dinâmicos
     X_I = cenarios_dinamicos(X, w, s)
     y_I = cenarios_dinamicos(y, w, s)
-
-    mse_treino = np.zeros((qtd_execucoes, len(y_I)))
-    mse_teste = np.zeros((qtd_execucoes, len(y_I)))
+ 
+    # calculando a quantidade de iterações
+    T = int(f/s*(len(y)-w)+f)
+    
+    mse_treino = np.zeros((qtd_execucoes, len(y_I) * f))
+    mse_teste = np.zeros((qtd_execucoes, len(y_I) * f))
 
     execucoes = np.arange(qtd_execucoes)
 
     for execucao in execucoes:
-
+        # inicializando array para 
+        mse_treino_lista = np.array([])
+        mse_teste_lista = np.array([])
+    
         print('Execução: ', execucao)
     
-        # Janelamento
+    # Janelamento
         for i in np.arange(len(y_I)):
             print('Janela: ', i)
             ## Divisão em treinamento e teste
@@ -122,11 +129,12 @@ def cenarios_execucoes(X, y, w, s, f, modelo, qtd_execucoes = 30):
     
             # grid search 
             for j in neuronios:
-                print('Neurônios: ', j)
-        
+                #print('Neurônios: ', j)
+                
                 # treinar NN para f iterações
-                parameters = modelo(X_treino.T, y_treino.T, n_h = j, num_iteracoes = f)
-        
+                parameters, mse_treino_lista_temp, mse_val_lista_temp, mse_teste_lista_temp = modelo(X_treino.T, y_treino.T, X_validacao.T, y_validacao.T, 
+                                                                                                     X_teste.T, y_teste.T, n_h = j, num_iteracoes = f)
+                
                 # predição na validação
                 y_pred_val = predict2(parameters, X_validacao.T)
                 mse_validacao = compute_cost2(y_pred_val, y_validacao.T, parameters)
@@ -136,18 +144,19 @@ def cenarios_execucoes(X, y, w, s, f, modelo, qtd_execucoes = 30):
                     best_mse = mse_validacao
                     #print('Melhor MSE: ', best_mse)
                     qtd_neuronios = j
-                
-            # retreinar e retestar com a melhor topologia 
-            X_treino_temp = np.vstack((X_treino, X_validacao))
-            y_treino_temp = np.vstack((y_treino, y_validacao))
+                        
+                    # salvando as listas com os mse de treino e teste
+                    best_mse_treino = np.array(mse_treino_lista_temp)
+                    best_mse_teste = np.array(mse_teste_lista_temp)
+
+            ## ao final da grid, concatenar as listas de treino e teste    
+            mse_treino_lista = np.concatenate((mse_treino_lista, best_mse_treino), axis = None)
+            mse_teste_lista = np.concatenate((mse_teste_lista, best_mse_teste), axis = None)
             
-            y_pred_treino = predict2(best_model, X_treino_temp.T)
-            mse_treino_temp = compute_cost2(y_pred_treino, y_treino_temp.T, best_model)
-            mse_treino[execucao,i] = mse_treino_temp
-        
-            y_pred_teste = predict2(best_model, X_teste.T)
-            mse_teste_temp = compute_cost2(y_pred_teste, y_teste.T, best_model)
-            mse_teste[execucao,i] = mse_teste_temp
+        # salvar lista com os mse de treino para todas as iterações
+        mse_treino[execucao,:] = mse_treino_lista
+        # salvar lista com os mse de teste para todas as iterações
+        mse_teste[execucao,:] = mse_teste_lista
 
     return mse_treino, mse_teste
 
@@ -158,11 +167,11 @@ def avaliacao_resultados(mse_treino, mse_teste):
     ### Garantindo que a quantidade de janelas é igual
     assert mse_treino.shape[1] == mse_teste.shape[1]
     
-    qtd_janelas = mse_treino.shape[1]
+    qtd_iteracoes = mse_treino.shape[1]
     
     # Calculando CMF
-    te = mse_treino.sum(axis=1)/qtd_janelas
-    ge = mse_teste.sum(axis=1)/qtd_janelas
+    te = mse_treino.sum(axis=1)/qtd_iteracoes
+    ge = mse_teste.sum(axis=1)/qtd_iteracoes
 
     # calcular a métrica fator de generalização
     gf = ge/te
