@@ -172,4 +172,4 @@ def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenari
     'GF medio':gf_medio,
     'GF desvio':gf_std}
     
-    return resultados
+    return resultados, mse_treino, mse_teste
