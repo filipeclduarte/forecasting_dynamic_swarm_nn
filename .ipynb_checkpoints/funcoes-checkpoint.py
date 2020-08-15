@@ -127,20 +127,18 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
     return mse_treino, mse_val, mse_teste
 
 
-## Criando avaliação dos resultados
 def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes):
     
     mse_treino = np.zeros((execucoes, quantidade_janelas*f))
     mse_teste = np.zeros((execucoes, quantidade_janelas*f))
 
     for ex in np.arange(execucoes):
-        id_neuronios = [np.nanargmin(mse_val_cenarios[ex,:,f*janela-1]) for janela in range(quantidade_janelas)]
+        id_neuronios = [np.nanargmin(mse_val_cenarios[ex,:,f*janela]) for janela in range(quantidade_janelas)]
         for jan in np.arange(quantidade_janelas):
-            mse_treino[ex, f*jan:f*jan+f-1] = mse_treino_cenarios[ex, id_neuronios[jan], f*jan:f*jan+f-1]
-            mse_teste[ex, f*jan:f*jan+f-1] = mse_teste_cenarios[ex, id_neuronios[jan], f*jan:f*jan+f-1]
+            mse_treino[ex, f*jan:f*jan+f] = mse_treino_cenarios[ex, id_neuronios[jan], f*jan:f*jan+f]
+            mse_teste[ex, f*jan:f*jan+f] = mse_teste_cenarios[ex, id_neuronios[jan], f*jan:f*jan+f]
     
     qtd_iteracoes = mse_treino.shape[1]
-    
     # Calculando CMF
     te = mse_treino.sum(axis=1)/qtd_iteracoes
     ge = mse_teste.sum(axis=1)/qtd_iteracoes
