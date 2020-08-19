@@ -1,0 +1,3 @@
+pd.DataFrame(hit_resultados_3_pso).to_csv('resultados/hit_resultados_3_pso.csv')
+pd.DataFrame(hit_resultados_mse_treino_3_pso).to_csv('resultados/hit_resultados_mse_treino_3_pso.csv')
+pd.DataFrame(hit_resultados_mse_teste_3_pso).to_csv('resultados/hit_resultados_mse_teste_3_pso.csv')

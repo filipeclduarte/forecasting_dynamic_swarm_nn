@@ -91,6 +91,7 @@ def cenarios_dinamicos(serie, window_size, step_size):
         
     return cenarios
 
+
 # Criando cenários
 def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoes = 30):
     
@@ -115,7 +116,10 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
         # Neuronios
         for j,z in zip(neuronios, np.arange(len(neuronios))):
             
-            parameters, mse_treino_lista_temp, mse_val_lista_temp, mse_teste_lista_temp = modelo(X_I, y_I, n_h = j, num_iteracoes = f, perc_treino=perc_treino, perc_val=perc_val)
+            parameters, mse_treino_lista_temp, mse_val_lista_temp, mse_teste_lista_temp = modelo(X_I, y_I, n_h = j, 
+                                                                                                 num_iteracoes = f, 
+                                                                                                 perc_treino=perc_treino, 
+                                                                                                 perc_val=perc_val)
 
             # salvar lista com os mse de treino para todas as iterações
             mse_treino[execucao, z,:] = np.array(mse_treino_lista_temp)
@@ -125,6 +129,7 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
             mse_teste[execucao, z,:] = np.array(mse_teste_lista_temp)
 
     return mse_treino, mse_val, mse_teste
+
 
 
 def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes):
@@ -163,16 +168,11 @@ def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenari
     print('GF medio: ', gf_medio)
     print('GF desvio: ', gf_std)
     
-    resultados = {'TE medio': te_medio,
-    'TE desvio': te_std,
-    'GE medio': ge_medio,
-    'GE desvio':ge_std,
-    'GF medio':gf_medio,
-    'GF desvio':gf_std}
+    resultados = {'TE medio': [te_medio],
+    'TE desvio': [te_std],
+    'GE medio': [ge_medio],
+    'GE desvio':[ge_std],
+    'GF medio':[gf_medio],
+    'GF desvio':[gf_std]}
     
     return resultados, mse_treino, mse_teste
-
-
-
-
-
