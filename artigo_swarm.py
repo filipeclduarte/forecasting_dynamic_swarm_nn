@@ -10,7 +10,12 @@ import matplotlib.pyplot as plt
 
 plt.rcParams['figure.figsize'] = (12.0, 9.0) # set default size of plots
 
+<<<<<<< Updated upstream
 ###  Modelo para Regressão Com backpropagation
+=======
+
+###  Modelo para Regressao Com backpropagation
+>>>>>>> Stashed changes
 
 def layer_sizes2(X, Y, n_h=4):
     """
@@ -63,10 +68,10 @@ def forward_propagation2(X, parameters):
     """
     Argumentos:
     X -- input de tamanho (n_x, m)
-    parametros -- python dicionário contendo os parâmetros (saída da função de inicialização dos parametros)
+    parametros -- python dicionário contendo os parâmetros (saída da funcao de inicializacao dos parametros)
     
     Retorna:
-    A2 -- A saída da função sigmoidal ou tangente hiberbólica ou relu
+    A2 -- A saída da funcao sigmoidal ou tangente hiberbólica ou relu
     cache -- dicionário contendo "Z1", "A1", "Z2" e "A2"
     """
 
@@ -97,7 +102,7 @@ def compute_cost2(A2, Y, parameters):
     Computa o custo dado os argumentos
     
     Arguments:
-    A2 -- Saída linear da segunda ativação de shape (1, qtd de exemplos)
+    A2 -- Saída linear da segunda ativacao de shape (1, qtd de exemplos)
     Y -- Valor verdadeiro do rótulo de shape (1, qtd de exemplos)
     parameters -- dicionário contendo os parâmetros W1, b1, W2 and b2
     
@@ -112,14 +117,14 @@ def compute_cost2(A2, Y, parameters):
     err = A2 - Y
     cost = 1/m * np.sum(err**2)
     
-    cost = float(np.squeeze(cost))  # garanta que o custo tem a dimensão esperada
+    cost = float(np.squeeze(cost))  # garanta que o custo tem a dimensao esperada
     assert(isinstance(cost, float))
     
     return cost
 
 def backward_propagation2(parameters, cache, X, Y):
     """
-    Implementa a retropropagação 
+    Implementa a retropropagacao 
     
     Argumentos:
     parameters -- dicionário contendo os parâmetros
@@ -128,7 +133,7 @@ def backward_propagation2(parameters, cache, X, Y):
     Y -- valor verdadeiro do rótulo de shape (1, qtd de examplos)
     
     Retorna:
-    grads -- dicionário contendo os gradientes em relação aos diferentes parâmetros
+    grads -- dicionário contendo os gradientes em relacao aos diferentes parâmetros
     """
     m = X.shape[1]
     
@@ -141,7 +146,7 @@ def backward_propagation2(parameters, cache, X, Y):
     A2 = cache['A2']
     Z2 = cache['Z2']
     
-    # Retropropagação: calcula-se dW1, db1, dW2, db2.
+    # Retropropagacao: calcula-se dW1, db1, dW2, db2.
     dZ2 = (A2 - Y)* (2/3/1.7159 - np.tanh(2/3*Z2)**2)
     #dZ2 = (A2 - Y)*(1.14393 - (A2**2)/1.5)
     dW2 = 1/m * np.dot(dZ2,A1.T)
@@ -183,7 +188,7 @@ def update_parameters2(parameters, grads, learning_rate = 1.2):
     dW2 = grads['dW2']
     db2 = grads['db2']
     
-    # Regra de atualização para cada parâmetro
+    # Regra de atualizacao para cada parâmetro
     W1 = W1 - learning_rate * dW1
     b1 = b1 - learning_rate * db1
     W2 = W2 - learning_rate * dW2
@@ -205,7 +210,7 @@ def nn_model2(X, Y, n_h, num_iteracoes, perc_treino, perc_val,print_cost = False
     Y -- labels de shape (1, qtd de examplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iterações
+    print_cost -- se True, mostra o custo a cada 1000 iteracões
     
     Retorna:
     parameters -- parâmetros aprendidos pelo modelo. Eles podem ser utilizados para fazer previsões (predict).
@@ -218,7 +223,7 @@ def nn_model2(X, Y, n_h, num_iteracoes, perc_treino, perc_val,print_cost = False
     n_x = layer_sizes2(X[0].T, Y[0].T)[0]
     n_y = layer_sizes2(X[0].T, Y[0].T)[2]
 
-    # Inicialização dos parâmetros
+    # Inicializacao dos parâmetros
     parameters = initialize_parameters2(n_x, n_h, n_y)
     
     for janela in np.arange(len(Y)):
@@ -233,13 +238,13 @@ def nn_model2(X, Y, n_h, num_iteracoes, perc_treino, perc_val,print_cost = False
             # Forward propagation. Inputs: "X, parameters". Outputs: "A2, cache".
             A2, cache = forward_propagation2(X_treino.T, parameters)
         
-            # Função de custo. Inputs: "A2, Y, parameters". Outputs: "cost".
+            # Funcao de custo. Inputs: "A2, Y, parameters". Outputs: "cost".
             cost = compute_cost2(A2, Y_treino.T, parameters)
  
-            # Retropropagação (Backpropagation). Inputs: "parameters, cache, X, Y". Outputs: "grads".
+            # Retropropagacao (Backpropagation). Inputs: "parameters, cache, X, Y". Outputs: "grads".
             grads = backward_propagation2(parameters, cache, X_treino.T, Y_treino.T)
  
-            # Atualização dos parâmetros pelo gradiente descendente. Inputs: "parameters, grads". Outputs: "parameters".
+            # Atualizacao dos parâmetros pelo gradiente descendente. Inputs: "parameters, grads". Outputs: "parameters".
             parameters = update_parameters2(parameters, grads, learning_rate=1.2)
         
             # computando mse de treino, teste e validacao
@@ -285,7 +290,7 @@ def parameter_dim_tot(parameter):
     parameter - array de parâmetros
 
     Retorna:
-    dim_tot - dimensão total dos parâmetris 
+    dim_tot - dimensao total dos parâmetris 
     '''
     dim_tot = np.array(parameter.shape).prod()
 
@@ -323,12 +328,12 @@ def parameters_stack(parameters):
 
     return params_stack
 
-# Unstack os parâmetros com base na dimensão dos atributos (matrizes de pesos)
+# Unstack os parâmetros com base na dimensao dos atributos (matrizes de pesos)
 def parameters_unstack(parameters_stack, atributos_dim):
     '''
     Argumentos:
     parameters_stack - array dos parâmetros no formato empilhado por colunas para trabalhar no PSO
-    atributos_dim - lista com dimensão total dos atributos 
+    atributos_dim - lista com dimensao total dos atributos 
 
     Retorna:
     params - lista com parâmetros no formato de lista
@@ -381,13 +386,13 @@ def parameters_reshape_dictionary(parameters_dict, parameters_unstacked):
 def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_particulas, atributos_dim, min_i, max_i, 
                 max_epoch, perc_treino, perc_val, w_in=0.7, w_fim = 0.2, c1=1.496, c2=1.496):
     '''
-        Função do Algoritmo SWARM PSO. 
+        Funcao do Algoritmo SWARM PSO. 
         Inputs:
-        - fun_opt: Função de fitness a ser otimizada
+        - fun_opt: Funcao de fitness a ser otimizada
         - qtd_particulas: Quantidade de partículas
-        - atributos_dim: Dimensão do Vetor de atributos 
-        - min: intervalo inferior do domínio da função  
-        - max: intervalo superior do domínio da função
+        - atributos_dim: Dimensao do Vetor de atributos 
+        - min: intervalo inferior do domínio da funcao  
+        - max: intervalo superior do domínio da funcao
         - w: inércia 
         - c1: influência do pbest (termo cognitivo)
         - c2: influência do gbest (termo do aprendizado social)
@@ -404,7 +409,7 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
     
     atributos_dim_sum = sum(atributos_dim)
 
-    # inicializar as partículas em posições aleatórias
+    # inicializar as partículas em posicões aleatórias
     particulas = np.random.uniform(low = min_i, high = max_i, size = (qtd_particulas, atributos_dim_sum))
 
     # inicializar a velocidade
@@ -422,7 +427,7 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
     parameters_gbest_dict = parameters.copy()
     parameters_dict = parameters.copy()
 
-    # Extrair a posição do gbest 
+    # Extrair a posicao do gbest 
     for z in np.arange(qtd_particulas):
         parameters_temp = particulas[[z],:]
         parameters_temp_unstacked = parameters_unstack(parameters_temp, atributos_dim)
@@ -444,8 +449,8 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
         Y_tv = np.hstack((Y_treino.T, Y_val.T))
         
         for k in np.arange(max_epoch):
-        #print('Iteração: ', k)
-        # Atualização do decaimento do peso
+        #print('Iteracao: ', k)
+        # Atualizacao do decaimento do peso
             w = weight_decay(w_in, w_fim,k, max_epoch)                
         
         # Iterar para atualizar o pbest e gbest para cada partrícula
@@ -480,7 +485,7 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
                     gbest_value = fun(A2_part, Y_treino.T, parameters_temp_dict)
                     parameters_gbest_dict = parameters_temp_dict
                                       
-         # Iteração para atualizar as posições das partículas
+         # Iteracao para atualizar as posicões das partículas
             for i in np.arange(qtd_particulas):
                 r1, r2 = np.random.rand(), np.random.rand()
                 velocidade[i, :] = w * velocidade[i, :] + c1 * r1 * (pbest[i, :] - particulas[i, :]) + c2 * r2 * (particulas[gbest, :] - particulas[i, :])
@@ -516,21 +521,21 @@ def update_parameters_pso_todos(X, parameters, best_cost, compute_cost2, A2, Y, 
     '''
     Argumentos:
     parameters - dicionário contendo os parâmetros do modelo
-    compute_cost2 - função a ser minimizada, neste caso a função de custo
-    A2 - previsão feita pelo modelo
+    compute_cost2 - funcao a ser minimizada, neste caso a funcao de custo
+    A2 - previsao feita pelo modelo
     Y - rótulo 
 
     Retorna:
     parameters - parâmetros atualizados a partir do PSO
     '''
 
-    # Extrair os parâmetros do dicionário para calcular a dimensão total e para criar o array colunas
+    # Extrair os parâmetros do dicionário para calcular a dimensao total e para criar o array colunas
     W1 = parameters['W1']
     b1 = parameters['b1']
     W2 = parameters['W2']
     b2 = parameters['b2']
 
-    # Extrair a dimensão total 
+    # Extrair a dimensao total 
     W1_dim = np.array(W1.shape).prod()
     b1_dim = np.array(b1.shape).prod()
     W2_dim = np.array(W2.shape).prod()
@@ -558,7 +563,7 @@ def nn_model_pso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_co
     Y -- labels de shape (1, qtd de exemplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iterações
+    print_cost -- se True, mostra o custo a cada 1000 iteracões
     
     Retorna:
     parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsões (predict).
@@ -567,14 +572,14 @@ def nn_model_pso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_co
     n_x = layer_sizes2(X[0].T, Y[0].T)[0]
     n_y = layer_sizes2(X[0].T, Y[0].T)[2]
     
-    # Inicialização dos parâmetros
+    # Inicializacao dos parâmetros
     parameters = initialize_parameters2(n_x, n_h, n_y)
     
     A2, _ = forward_propagation2(X[0].T, parameters)
 
     best_cost = compute_cost2(A2, Y[0].T, parameters)
     
-    # Atualização dos parâmetros pelo gradiente descendente. Inputs: "parameters, compute_cost2, A2, Y". Outputs: "parameters".
+    # Atualizacao dos parâmetros pelo gradiente descendente. Inputs: "parameters, compute_cost2, A2, Y". Outputs: "parameters".
     parameters, treino_mse, val_mse, teste_mse = update_parameters_pso_todos(X=X, parameters=parameters, best_cost=best_cost,compute_cost2=compute_cost2, 
                                                                              A2=A2, Y=Y, num_iteracoes=num_iteracoes, perc_treino=perc_treino, perc_val=perc_val)
 
@@ -752,21 +757,21 @@ def update_parameters_cqso_todos(X, parameters, best_cost, compute_cost2, A2, Y,
     '''
     Argumentos:
     parameters - dicionário contendo os parâmetros do modelo
-    compute_cost2 - função a ser minimizada, neste caso a função de custo
-    A2 - previsão feita pelo modelo
+    compute_cost2 - funcao a ser minimizada, neste caso a funcao de custo
+    A2 - previsao feita pelo modelo
     Y - rótulo 
 
     Retorna:
     parameters - parâmetros atualizados a partir do PSO
     '''
 
-    # Extrair os parâmetros do dicionário para calcular a dimensão total e para criar o array colunas
+    # Extrair os parâmetros do dicionário para calcular a dimensao total e para criar o array colunas
     W1 = parameters['W1']
     b1 = parameters['b1']
     W2 = parameters['W2']
     b2 = parameters['b2']
 
-    # Extrair a dimensão total 
+    # Extrair a dimensao total 
     W1_dim = np.array(W1.shape).prod()
     b1_dim = np.array(b1.shape).prod()
     W2_dim = np.array(W2.shape).prod()
@@ -794,7 +799,7 @@ def nn_model_cqso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_c
     Y -- labels de shape (1, qtd de exemplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iterações
+    print_cost -- se True, mostra o custo a cada 1000 iteracões
     
     Retorna:
     parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsões (predict).
@@ -803,14 +808,14 @@ def nn_model_cqso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_c
     n_x = layer_sizes2(X[0].T, Y[0].T)[0]
     n_y = layer_sizes2(X[0].T, Y[0].T)[2]
     
-    # Inicialização dos parâmetros
+    # Inicializacao dos parâmetros
     parameters = initialize_parameters2(n_x, n_h, n_y)
     
     A2, _ = forward_propagation2(X[0].T, parameters)
 
     best_cost = compute_cost2(A2, Y[0].T, parameters)
     
-    # Atualização dos parâmetros pelo cqsos. Inputs: "parameters, compute_cost2, A2, Y". Outputs: "parameters".
+    # Atualizacao dos parâmetros pelo cqsos. Inputs: "parameters, compute_cost2, A2, Y". Outputs: "parameters".
     parameters, treino_mse, val_mse, teste_mse = update_parameters_cqso_todos(X=X, parameters=parameters, best_cost=best_cost,compute_cost2=compute_cost2, 
                                                                              A2=A2, Y=Y, num_iteracoes=num_iteracoes, perc_treino=perc_treino, perc_val=perc_val)
     
@@ -819,7 +824,7 @@ def nn_model_cqso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_c
 
 ### Experimento com as as séries do artigo 
 
-## Importar funções para pre-processar os dados
+## Importar funcões para pre-processar os dados
 from funcoes import split_sequence, divisao_dados_temporais, normalizar_serie, desnormalizar
 
 import time
@@ -881,7 +886,7 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
     X_I = cenarios_dinamicos(X, w, s)
     y_I = cenarios_dinamicos(y, w, s)
  
-    # calculando a quantidade de iterações
+    # calculando a quantidade de iteracões
     T = int(f/s*(len(y)-w)+f)
     
     neuronios = np.arange(2, 26)
@@ -893,7 +898,7 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
     execucoes = np.arange(qtd_execucoes)
 
     for execucao in execucoes:
-        print('Execução: ', execucao)
+        print('Execucao: ', execucao)
 
         # Neuronios
         for j,z in zip(neuronios, np.arange(len(neuronios))):
@@ -903,11 +908,11 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
                                                                                                  perc_treino=perc_treino, 
                                                                                                  perc_val=perc_val)
 
-            # salvar lista com os mse de treino para todas as iterações
+            # salvar lista com os mse de treino para todas as iteracões
             mse_treino[execucao, z,:] = np.array(mse_treino_lista_temp)
             # salvar lista com os mse de validacao para todas as iteracoes
             mse_val[execucao, z,:] = np.array(mse_val_lista_temp)
-            # salvar lista com os mse de teste para todas as iterações
+            # salvar lista com os mse de teste para todas as iteracões
             mse_teste[execucao, z,:] = np.array(mse_teste_lista_temp)
 
     return mse_treino, mse_val, mse_teste
@@ -929,10 +934,10 @@ def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenari
     te = mse_treino.sum(axis=1)/qtd_iteracoes
     ge = mse_teste.sum(axis=1)/qtd_iteracoes
 
-    # calcular a métrica fator de generalização
+    # calcular a métrica fator de generalizacao
     gf = ge/te
 
-    # Média e desvio padrão
+    # Média e desvio padrao
     te_medio = te.mean()
     te_std = te.std()
 
@@ -959,14 +964,14 @@ def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenari
     return resultados, mse_treino, mse_teste
 
 
-# Quantidade total de iterações para o primeiro cenário
+# Quantidade total de iteracões para o primeiro cenário
 
 # Seed
 np.random.seed(3)
 
 w = 60 # tamanho da janela
 s = 10 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(y)-w)+f)
 
 quantidade_janelas = int((len(y) - w)/s)
@@ -983,7 +988,7 @@ sam_resultados_1_backprop, sam_resultados_mse_treino_1_backprop, sam_resultados_
                                                                                                                              f, quantidade_janelas, 
                                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sam_resultados_1_backprop).to_csv('resultados/sam_resultados_1_backprop.csv')
 pd.DataFrame(sam_resultados_mse_treino_1_backprop).to_csv('resultados/sam_resultados_mse_treino_1_backprop.csv')
@@ -999,7 +1004,7 @@ sam_resultados_1_pso, sam_resultados_mse_treino_1_pso, sam_resultados_mse_teste_
                                                                                                               f, quantidade_janelas, 
                                                                                                               execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_1_pso).to_csv('resultados/sam_resultados_1_pso.csv')
 pd.DataFrame(sam_resultados_mse_treino_1_pso).to_csv('resultados/sam_resultados_mse_treino_1_pso.csv')
@@ -1016,7 +1021,7 @@ sam_resultados_1_cqso, sam_resultados_mse_treino_1_cqso, sam_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_1_cqso).to_csv('resultados/sam_resultados_1_cqso.csv')
 pd.DataFrame(sam_resultados_mse_treino_1_cqso).to_csv('resultados/sam_resultados_mse_treino_1_cqso.csv')
@@ -1034,9 +1039,9 @@ pd.DataFrame(sam_resultados_mse_teste_1_cqso).to_csv('resultados/sam_resultados_
 
 w = 60 # tamanho da janela
 s = 20 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(y)-w)+f)
-print('Quantidade total de iterações: ', T)
+print('Quantidade total de iteracoes: ', T)
 
 quantidade_janelas = int((len(y) - w)/s)
 
@@ -1052,7 +1057,7 @@ sam_resultados_2_backprop, sam_resultados_mse_treino_2_backprop, sam_resultados_
                                                                                                                              f, quantidade_janelas, 
                                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sam_resultados_2_backprop).to_csv('resultados/sam_resultados_2_backprop.csv')
 pd.DataFrame(sam_resultados_mse_treino_2_backprop).to_csv('resultados/sam_resultados_mse_treino_2_backprop.csv')
@@ -1070,7 +1075,7 @@ sam_resultados_2_pso, sam_resultados_mse_treino_2_pso, sam_resultados_mse_teste_
                                                                                                               f, quantidade_janelas, 
                                                                                                               execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_2_pso).to_csv('resultados/sam_resultados_2_pso.csv')
 pd.DataFrame(sam_resultados_mse_treino_2_pso).to_csv('resultados/sam_resultados_mse_treino_2_pso.csv')
@@ -1087,7 +1092,7 @@ sam_resultados_2_cqso, sam_resultados_mse_treino_2_cqso, sam_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_2_cqso).to_csv('resultados/sam_resultados_2_cqso.csv')
 pd.DataFrame(sam_resultados_mse_treino_2_cqso).to_csv('resultados/sam_resultados_mse_treino_2_cqso.csv')
@@ -1104,9 +1109,9 @@ pd.DataFrame(sam_resultados_mse_teste_2_cqso).to_csv('resultados/sam_resultados_
 
 w = 60 # tamanho da janela
 s = 40 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(sunspot)-w)+f)
-print('Quantidade total de iterações: ', T)
+print('Quantidade total de iteracões: ', T)
 quantidade_janelas = int((len(y) - w)/s)
 
 tic = time.time()
@@ -1120,7 +1125,7 @@ sam_resultados_3_backprop, sam_resultados_mse_treino_3_backprop, sam_resultados_
                                                                                                                              f, quantidade_janelas, 
                                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sam_resultados_3_backprop).to_csv('resultados/sam_resultados_3_backprop.csv')
 pd.DataFrame(sam_resultados_mse_treino_3_backprop).to_csv('resultados/sam_resultados_mse_treino_3_backprop.csv')
@@ -1136,7 +1141,7 @@ sam_resultados_3_pso, sam_resultados_mse_treino_3_pso, sam_resultados_mse_teste_
                                                                                                               f, quantidade_janelas, 
                                                                                                               execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_3_pso).to_csv('resultados/sam_resultados_3_pso.csv')
 pd.DataFrame(sam_resultados_mse_treino_3_pso).to_csv('resultados/sam_resultados_mse_treino_3_pso.csv')
@@ -1153,7 +1158,7 @@ sam_resultados_3_cqso, sam_resultados_mse_treino_3_cqso, sam_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_3_cqso).to_csv('resultados/sam_resultados_3_cqso.csv')
 pd.DataFrame(sam_resultados_mse_treino_3_cqso).to_csv('resultados/sam_resultados_mse_treino_3_cqso.csv')
@@ -1171,9 +1176,9 @@ pd.DataFrame(sam_resultados_mse_teste_3_cqso).to_csv('resultados/sam_resultados_
 
 w = 60 # tamanho da janela
 s = 60 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(sunspot)-w)+f)
-print('Quantidade total de iterações: ', T)
+print('Quantidade total de iteracões: ', T)
 quantidade_janelas = int((len(y) - w)/s)
 
 
@@ -1188,7 +1193,7 @@ sam_resultados_4_backprop, sam_resultados_mse_treino_4_backprop, sam_resultados_
                                                                                                                              f, quantidade_janelas, 
                                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sam_resultados_4_backprop).to_csv('resultados/sam_resultados_4_backprop.csv')
 pd.DataFrame(sam_resultados_mse_treino_4_backprop).to_csv('resultados/sam_resultados_mse_treino_4_backprop.csv')
@@ -1205,7 +1210,7 @@ sam_resultados_4_pso, sam_resultados_mse_treino_4_pso, sam_resultados_mse_teste_
                                                                                                               f, quantidade_janelas, 
                                                                                                               execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_4_pso).to_csv('resultados/sam_resultados_4_pso.csv')
 pd.DataFrame(sam_resultados_mse_treino_4_pso).to_csv('resultados/sam_resultados_mse_treino_4_pso.csv')
@@ -1222,7 +1227,7 @@ sam_resultados_4_cqso, sam_resultados_mse_treino_4_cqso, sam_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sam_resultados_4_cqso).to_csv('resultados/sam_resultados_4_cqso.csv')
 pd.DataFrame(sam_resultados_mse_treino_4_cqso).to_csv('resultados/sam_resultados_mse_treino_4_cqso.csv')
@@ -1257,7 +1262,7 @@ X, y = split_sequence(airline_norm.values, qtd_inputs, 1)
 
 w = 32 # tamanho da janela
 s = 5 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(airline)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1273,7 +1278,7 @@ iap_resultados_1_backprop, iap_resultados_mse_treino_1_backprop, iap_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(iap_resultados_1_backprop).to_csv('resultados/iap_resultados_1_backprop.csv')
 pd.DataFrame(iap_resultados_mse_treino_1_backprop).to_csv('resultados/iap_resultados_mse_treino_1_backprop.csv')
@@ -1292,7 +1297,7 @@ iap_resultados_1_pso, iap_resultados_mse_treino_1_pso, iap_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_1_pso).to_csv('resultados/iap_resultados_1_pso.csv')
 pd.DataFrame(iap_resultados_mse_treino_1_pso).to_csv('resultados/iap_resultados_mse_treino_1_pso.csv')
@@ -1309,7 +1314,7 @@ iap_resultados_1_cqso, iap_resultados_mse_treino_1_cqso, iap_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_1_cqso).to_csv('resultados/iap_resultados_1_cqso.csv')
 pd.DataFrame(iap_resultados_mse_treino_1_cqso).to_csv('resultados/iap_resultados_mse_treino_1_cqso.csv')
@@ -1324,7 +1329,7 @@ pd.DataFrame(iap_resultados_mse_teste_1_cqso).to_csv('resultados/iap_resultados_
 
 w = 32 # tamanho da janela
 s = 10 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(airline)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1341,7 +1346,7 @@ iap_resultados_2_backprop, iap_resultados_mse_treino_2_backprop, iap_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(iap_resultados_2_backprop).to_csv('resultados/iap_resultados_2_backprop.csv')
 pd.DataFrame(iap_resultados_mse_treino_2_backprop).to_csv('resultados/iap_resultados_mse_treino_2_backprop.csv')
@@ -1358,7 +1363,7 @@ iap_resultados_2_pso, iap_resultados_mse_treino_2_pso, iap_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_2_pso).to_csv('resultados/iap_resultados_2_pso.csv')
 pd.DataFrame(iap_resultados_mse_treino_2_pso).to_csv('resultados/iap_resultados_mse_treino_2_pso.csv')
@@ -1375,7 +1380,7 @@ iap_resultados_2_cqso, iap_resultados_mse_treino_2_cqso, iap_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_2_cqso).to_csv('resultados/iap_resultados_2_cqso.csv')
 pd.DataFrame(iap_resultados_mse_treino_2_cqso).to_csv('resultados/iap_resultados_mse_treino_2_cqso.csv')
@@ -1390,7 +1395,7 @@ pd.DataFrame(iap_resultados_mse_teste_2_cqso).to_csv('resultados/iap_resultados_
 
 w = 32 # tamanho da janela
 s = 25 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(airline)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1406,7 +1411,7 @@ iap_resultados_3_backprop, iap_resultados_mse_treino_3_backprop, iap_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(iap_resultados_3_backprop).to_csv('resultados/iap_resultados_3_backprop.csv')
 pd.DataFrame(iap_resultados_mse_treino_3_backprop).to_csv('resultados/iap_resultados_mse_treino_3_backprop.csv')
@@ -1424,7 +1429,7 @@ iap_resultados_3_pso, iap_resultados_mse_treino_3_pso, iap_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_3_pso).to_csv('resultados/iap_resultados_3_pso.csv')
 pd.DataFrame(iap_resultados_mse_treino_3_pso).to_csv('resultados/iap_resultados_mse_treino_3_pso.csv')
@@ -1441,7 +1446,7 @@ iap_resultados_3_cqso, iap_resultados_mse_treino_3_cqso, iap_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_3_cqso).to_csv('resultados/iap_resultados_3_cqso.csv')
 pd.DataFrame(iap_resultados_mse_treino_3_cqso).to_csv('resultados/iap_resultados_mse_treino_3_cqso.csv')
@@ -1473,7 +1478,7 @@ iap_resultados_4_backprop, iap_resultados_mse_treino_4_backprop, iap_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(iap_resultados_4_backprop).to_csv('resultados/iap_resultados_4_backprop.csv')
 pd.DataFrame(iap_resultados_mse_treino_4_backprop).to_csv('resultados/iap_resultados_mse_treino_4_backprop.csv')
@@ -1491,7 +1496,7 @@ iap_resultados_4_pso, iap_resultados_mse_treino_4_pso, iap_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_4_pso).to_csv('resultados/iap_resultados_4_pso.csv')
 pd.DataFrame(iap_resultados_mse_treino_4_pso).to_csv('resultados/iap_resultados_mse_treino_4_pso.csv')
@@ -1508,7 +1513,7 @@ iap_resultados_4_cqso, iap_resultados_mse_treino_4_cqso, iap_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(iap_resultados_4_cqso).to_csv('resultados/iap_resultados_4_cqso.csv')
 pd.DataFrame(iap_resultados_mse_treino_4_cqso).to_csv('resultados/iap_resultados_mse_treino_4_cqso.csv')
@@ -1543,7 +1548,7 @@ X, y = split_sequence(aws_norm.values, qtd_inputs, 1)
 
 w = 42 # tamanho da janela
 s = 5 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1560,7 +1565,7 @@ aws_resultados_1_backprop, aws_resultados_mse_treino_1_backprop, aws_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(aws_resultados_1_backprop).to_csv('resultados/aws_resultados_1_backprop.csv')
 pd.DataFrame(aws_resultados_mse_treino_1_backprop).to_csv('resultados/aws_resultados_mse_treino_1_backprop.csv')
@@ -1577,7 +1582,7 @@ aws_resultados_1_pso, aws_resultados_mse_treino_1_pso, aws_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_1_pso).to_csv('resultados/aws_resultados_1_pso.csv')
 pd.DataFrame(aws_resultados_mse_treino_1_pso).to_csv('resultados/aws_resultados_mse_treino_1_pso.csv')
@@ -1594,7 +1599,7 @@ aws_resultados_1_cqso, aws_resultados_mse_treino_1_cqso, aws_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_1_cqso).to_csv('resultados/aws_resultados_1_cqso.csv')
 pd.DataFrame(aws_resultados_mse_treino_1_cqso).to_csv('resultados/aws_resultados_mse_treino_1_cqso.csv')
@@ -1609,7 +1614,7 @@ pd.DataFrame(aws_resultados_mse_teste_1_cqso).to_csv('resultados/aws_resultados_
 
 w = 42 # tamanho da janela
 s = 20 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1625,7 +1630,7 @@ aws_resultados_2_backprop, aws_resultados_mse_treino_2_backprop, aws_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(aws_resultados_2_backprop).to_csv('resultados/aws_resultados_2_backprop.csv')
 pd.DataFrame(aws_resultados_mse_treino_2_backprop).to_csv('resultados/aws_resultados_mse_treino_2_backprop.csv')
@@ -1642,7 +1647,7 @@ aws_resultados_2_pso, aws_resultados_mse_treino_2_pso, aws_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_2_pso).to_csv('resultados/aws_resultados_2_pso.csv')
 pd.DataFrame(aws_resultados_mse_treino_2_pso).to_csv('resultados/aws_resultados_mse_treino_2_pso.csv')
@@ -1659,7 +1664,7 @@ aws_resultados_2_cqso, aws_resultados_mse_treino_2_cqso, aws_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_2_cqso).to_csv('resultados/aws_resultados_2_cqso.csv')
 pd.DataFrame(aws_resultados_mse_treino_2_cqso).to_csv('resultados/aws_resultados_mse_treino_2_cqso.csv')
@@ -1674,7 +1679,7 @@ pd.DataFrame(aws_resultados_mse_teste_2_cqso).to_csv('resultados/aws_resultados_
 
 w = 42 # tamanho da janela
 s = 35 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1692,7 +1697,7 @@ aws_resultados_3_backprop, aws_resultados_mse_treino_3_backprop, aws_resultados_
                                                                                                                             execucoes = 30) 
 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(aws_resultados_3_backprop).to_csv('resultados/aws_resultados_3_backprop.csv')
 pd.DataFrame(aws_resultados_mse_treino_3_backprop).to_csv('resultados/aws_resultados_mse_treino_3_backprop.csv')
@@ -1710,7 +1715,7 @@ aws_resultados_3_pso, aws_resultados_mse_treino_3_pso, aws_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_3_pso).to_csv('resultados/aws_resultados_3_pso.csv')
 pd.DataFrame(aws_resultados_mse_treino_3_pso).to_csv('resultados/aws_resultados_mse_treino_3_pso.csv')
@@ -1727,7 +1732,7 @@ aws_resultados_3_cqso, aws_resultados_mse_treino_3_cqso, aws_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_3_cqso).to_csv('resultados/aws_resultados_3_cqso.csv')
 pd.DataFrame(aws_resultados_mse_treino_3_cqso).to_csv('resultados/aws_resultados_mse_treino_3_cqso.csv')
@@ -1742,7 +1747,7 @@ pd.DataFrame(aws_resultados_mse_teste_3_cqso).to_csv('resultados/aws_resultados_
 
 w = 42 # tamanho da janela
 s = 32 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1759,7 +1764,7 @@ aws_resultados_4_backprop, aws_resultados_mse_treino_4_backprop, aws_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(aws_resultados_4_backprop).to_csv('resultados/aws_resultados_4_backprop.csv')
 pd.DataFrame(aws_resultados_mse_treino_4_backprop).to_csv('resultados/aws_resultados_mse_treino_4_backprop.csv')
@@ -1778,7 +1783,7 @@ aws_resultados_4_pso, aws_resultados_mse_treino_4_pso, aws_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_4_pso).to_csv('resultados/aws_resultados_4_pso.csv')
 pd.DataFrame(aws_resultados_mse_treino_4_pso).to_csv('resultados/aws_resultados_mse_treino_4_pso.csv')
@@ -1795,7 +1800,7 @@ aws_resultados_4_cqso, aws_resultados_mse_treino_4_cqso, aws_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(aws_resultados_4_cqso).to_csv('resultados/aws_resultados_4_cqso.csv')
 pd.DataFrame(aws_resultados_mse_treino_4_cqso).to_csv('resultados/aws_resultados_mse_treino_4_cqso.csv')
@@ -1830,7 +1835,7 @@ X, y = split_sequence(aws_norm.values, qtd_inputs, 1)
 
 w = 58 # tamanho da janela
 s = 10 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(sp500)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1846,7 +1851,7 @@ sp500_resultados_1_backprop, sp500_resultados_mse_treino_1_backprop, sp500_resul
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sp500_resultados_1_backprop).to_csv('resultados/sp500_resultados_1_backprop.csv')
 pd.DataFrame(sp500_resultados_mse_treino_1_backprop).to_csv('resultados/sp500_resultados_mse_treino_1_backprop.csv')
@@ -1864,7 +1869,7 @@ sp500_resultados_1_pso, sp500_resultados_mse_treino_1_pso, sp500_resultados_mse_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_1_pso).to_csv('resultados/sp500_resultados_1_pso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_1_pso).to_csv('resultados/sp500_resultados_mse_treino_1_pso.csv')
@@ -1881,7 +1886,7 @@ sp500_resultados_1_cqso, sp500_resultados_mse_treino_1_cqso, sp500_resultados_ms
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_1_cqso).to_csv('resultados/sp500_resultados_1_cqso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_1_cqso).to_csv('resultados/sp500_resultados_mse_treino_1_cqso.csv')
@@ -1897,7 +1902,7 @@ pd.DataFrame(sp500_resultados_mse_teste_1_cqso).to_csv('resultados/sp500_resulta
 
 w = 58 # tamanho da janela
 s = 20 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1914,7 +1919,7 @@ sp500_resultados_2_backprop, sp500_resultados_mse_treino_2_backprop, sp500_resul
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sp500_resultados_2_backprop).to_csv('resultados/sp500_resultados_2_backprop.csv')
 pd.DataFrame(sp500_resultados_mse_treino_2_backprop).to_csv('resultados/sp500_resultados_mse_treino_2_backprop.csv')
@@ -1932,7 +1937,7 @@ sp500_resultados_2_pso, sp500_resultados_mse_treino_2_pso, sp500_resultados_mse_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_2_pso).to_csv('resultados/sp500_resultados_2_pso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_2_pso).to_csv('resultados/sp500_resultados_mse_treino_2_pso.csv')
@@ -1949,7 +1954,7 @@ sp500_resultados_2_cqso, sp500_resultados_mse_treino_2_cqso, sp500_resultados_ms
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_2_cqso).to_csv('resultados/sp500_resultados_2_cqso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_2_cqso).to_csv('resultados/sp500_resultados_mse_treino_2_cqso.csv')
@@ -1964,7 +1969,7 @@ pd.DataFrame(sp500_resultados_mse_teste_2_cqso).to_csv('resultados/sp500_resulta
 
 w = 58 # tamanho da janela
 s = 40 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -1981,7 +1986,7 @@ sp500_resultados_3_backprop, sp500_resultados_mse_treino_3_backprop, sp500_resul
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sp500_resultados_3_backprop).to_csv('resultados/sp500_resultados_3_backprop.csv')
 pd.DataFrame(sp500_resultados_mse_treino_3_backprop).to_csv('resultados/sp500_resultados_mse_treino_3_backprop.csv')
@@ -1999,7 +2004,7 @@ sp500_resultados_3_pso, sp500_resultados_mse_treino_3_pso, sp500_resultados_mse_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_3_pso).to_csv('resultados/sp500_resultados_3_pso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_3_pso).to_csv('resultados/sp500_resultados_mse_treino_3_pso.csv')
@@ -2017,7 +2022,7 @@ sp500_resultados_3_cqso, sp500_resultados_mse_treino_3_cqso, sp500_resultados_ms
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_3_cqso).to_csv('resultados/sp500_resultados_3_cqso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_3_cqso).to_csv('resultados/sp500_resultados_mse_treino_3_cqso.csv')
@@ -2032,7 +2037,7 @@ pd.DataFrame(sp500_resultados_mse_teste_3_cqso).to_csv('resultados/sp500_resulta
 
 w = 58 # tamanho da janela
 s = 58 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(aws)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2048,7 +2053,7 @@ sp500_resultados_4_backprop, sp500_resultados_mse_treino_4_backprop, sp500_resul
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(sp500_resultados_4_backprop).to_csv('resultados/sp500_resultados_4_backprop.csv')
 pd.DataFrame(sp500_resultados_mse_treino_4_backprop).to_csv('resultados/sp500_resultados_mse_treino_4_backprop.csv')
@@ -2068,7 +2073,7 @@ sp500_resultados_4_pso, sp500_resultados_mse_treino_4_pso, sp500_resultados_mse_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_4_pso).to_csv('resultados/sp500_resultados_4_pso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_4_pso).to_csv('resultados/sp500_resultados_mse_treino_4_pso.csv')
@@ -2085,7 +2090,7 @@ sp500_resultados_4_cqso, sp500_resultados_mse_treino_4_cqso, sp500_resultados_ms
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(sp500_resultados_4_cqso).to_csv('resultados/sp500_resultados_4_cqso.csv')
 pd.DataFrame(sp500_resultados_mse_treino_4_cqso).to_csv('resultados/sp500_resultados_mse_treino_4_cqso.csv')
@@ -2119,7 +2124,7 @@ X, y = split_sequence(usd_norm.values, qtd_inputs, 1)
 
 w = 20 # tamanho da janela
 s = 2 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(usd)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2136,7 +2141,7 @@ usd_resultados_1_backprop, usd_resultados_mse_treino_1_backprop, usd_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(usd_resultados_1_backprop).to_csv('resultados/usd_resultados_1_backprop.csv')
 pd.DataFrame(usd_resultados_mse_treino_1_backprop).to_csv('resultados/usd_resultados_mse_treino_1_backprop.csv')
@@ -2154,7 +2159,7 @@ usd_resultados_1_pso, usd_resultados_mse_treino_1_pso, usd_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_1_pso).to_csv('resultados/usd_resultados_1_pso.csv')
 pd.DataFrame(usd_resultados_mse_treino_1_pso).to_csv('resultados/usd_resultados_mse_treino_1_pso.csv')
@@ -2171,7 +2176,7 @@ usd_resultados_1_cqso, usd_resultados_mse_treino_1_cqso, usd_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_1_cqso).to_csv('resultados/usd_resultados_1_cqso.csv')
 pd.DataFrame(usd_resultados_mse_treino_1_cqso).to_csv('resultados/usd_resultados_mse_treino_1_cqso.csv')
@@ -2187,7 +2192,7 @@ pd.DataFrame(usd_resultados_mse_teste_1_cqso).to_csv('resultados/usd_resultados_
 
 w = 20 # tamanho da janela
 s = 8 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(usd)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2203,7 +2208,7 @@ usd_resultados_2_backprop, usd_resultados_mse_treino_2_backprop, usd_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(usd_resultados_2_backprop).to_csv('resultados/usd_resultados_2_backprop.csv')
 pd.DataFrame(usd_resultados_mse_treino_2_backprop).to_csv('resultados/usd_resultados_mse_treino_2_backprop.csv')
@@ -2220,7 +2225,7 @@ usd_resultados_2_pso, usd_resultados_mse_treino_2_pso, usd_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_2_pso).to_csv('resultados/usd_resultados_2_pso.csv')
 pd.DataFrame(usd_resultados_mse_treino_2_pso).to_csv('resultados/usd_resultados_mse_treino_2_pso.csv')
@@ -2237,7 +2242,7 @@ usd_resultados_2_cqso, usd_resultados_mse_treino_2_cqso, usd_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_2_cqso).to_csv('resultados/usd_resultados_2_cqso.csv')
 pd.DataFrame(usd_resultados_mse_treino_2_cqso).to_csv('resultados/usd_resultados_mse_treino_2_cqso.csv')
@@ -2252,7 +2257,7 @@ pd.DataFrame(usd_resultados_mse_teste_2_cqso).to_csv('resultados/usd_resultados_
 
 w = 20 # tamanho da janela
 s = 16 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(usd)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2269,7 +2274,7 @@ usd_resultados_3_backprop, usd_resultados_mse_treino_3_backprop, usd_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(usd_resultados_3_backprop).to_csv('resultados/usd_resultados_3_backprop.csv')
 pd.DataFrame(usd_resultados_mse_treino_3_backprop).to_csv('resultados/usd_resultados_mse_treino_3_backprop.csv')
@@ -2287,7 +2292,7 @@ usd_resultados_3_pso, usd_resultados_mse_treino_3_pso, usd_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_3_pso).to_csv('resultados/usd_resultados_3_pso.csv')
 pd.DataFrame(usd_resultados_mse_treino_3_pso).to_csv('resultados/usd_resultados_mse_treino_3_pso.csv')
@@ -2304,7 +2309,7 @@ usd_resultados_3_cqso, usd_resultados_mse_treino_3_cqso, usd_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_3_cqso).to_csv('resultados/usd_resultados_3_cqso.csv')
 pd.DataFrame(usd_resultados_mse_treino_3_cqso).to_csv('resultados/usd_resultados_mse_treino_3_cqso.csv')
@@ -2320,7 +2325,7 @@ pd.DataFrame(usd_resultados_mse_teste_3_cqso).to_csv('resultados/usd_resultados_
 
 w = 20 # tamanho da janela
 s = 20 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(usd)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2337,7 +2342,7 @@ usd_resultados_4_backprop, usd_resultados_mse_treino_4_backprop, usd_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(usd_resultados_4_backprop).to_csv('resultados/usd_resultados_4_backprop.csv')
 pd.DataFrame(usd_resultados_mse_treino_4_backprop).to_csv('resultados/usd_resultados_mse_treino_4_backprop.csv')
@@ -2355,7 +2360,7 @@ usd_resultados_4_pso, usd_resultados_mse_treino_4_pso, usd_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_4_pso).to_csv('resultados/usd_resultados_4_pso.csv')
 pd.DataFrame(usd_resultados_mse_treino_4_pso).to_csv('resultados/usd_resultados_mse_treino_4_pso.csv')
@@ -2372,7 +2377,7 @@ usd_resultados_4_cqso, usd_resultados_mse_treino_4_cqso, usd_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(usd_resultados_4_cqso).to_csv('resultados/usd_resultados_4_cqso.csv')
 pd.DataFrame(usd_resultados_mse_treino_4_cqso).to_csv('resultados/usd_resultados_mse_treino_4_cqso.csv')
@@ -2408,7 +2413,7 @@ X, y = split_sequence(hit_norm.values, qtd_inputs, 1)
 
 w = 584 # tamanho da janela
 s = 100 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(hit)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2426,7 +2431,7 @@ hit_resultados_1_backprop, hit_resultados_mse_treino_1_backprop, hit_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(hit_resultados_1_backprop).to_csv('resultados/hit_resultados_1_backprop.csv')
 pd.DataFrame(hit_resultados_mse_treino_1_backprop).to_csv('resultados/hit_resultados_mse_treino_1_backprop.csv')
@@ -2444,7 +2449,7 @@ hit_resultados_1_pso, hit_resultados_mse_treino_1_pso, hit_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_1_pso).to_csv('resultados/hit_resultados_1_pso.csv')
 pd.DataFrame(hit_resultados_mse_treino_1_pso).to_csv('resultados/hit_resultados_mse_treino_1_pso.csv')
@@ -2461,7 +2466,7 @@ hit_resultados_1_cqso, hit_resultados_mse_treino_1_cqso, hit_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_1_cqso).to_csv('resultados/hit_resultados_1_cqso.csv')
 pd.DataFrame(hit_resultados_mse_treino_1_cqso).to_csv('resultados/hit_resultados_mse_treino_1_cqso.csv')
@@ -2478,7 +2483,7 @@ pd.DataFrame(hit_resultados_mse_teste_1_cqso).to_csv('resultados/hit_resultados_
 
 w = 584 # tamanho da janela
 s = 250 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(hit)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2496,7 +2501,7 @@ hit_resultados_2_backprop, hit_resultados_mse_treino_2_backprop, hit_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(hit_resultados_2_backprop).to_csv('resultados/hit_resultados_2_backprop.csv')
 pd.DataFrame(hit_resultados_mse_treino_2_backprop).to_csv('resultados/hit_resultados_mse_treino_2_backprop.csv')
@@ -2514,7 +2519,7 @@ hit_resultados_2_pso, hit_resultados_mse_treino_2_pso, hit_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_2_pso).to_csv('resultados/hit_resultados_2_pso.csv')
 pd.DataFrame(hit_resultados_mse_treino_2_pso).to_csv('resultados/hit_resultados_mse_treino_2_pso.csv')
@@ -2531,7 +2536,7 @@ hit_resultados_2_cqso, hit_resultados_mse_treino_2_cqso, hit_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_2_cqso).to_csv('resultados/hit_resultados_2_cqso.csv')
 pd.DataFrame(hit_resultados_mse_treino_2_cqso).to_csv('resultados/hit_resultados_mse_treino_2_cqso.csv')
@@ -2549,7 +2554,7 @@ pd.DataFrame(hit_resultados_mse_teste_2_cqso).to_csv('resultados/hit_resultados_
 
 w = 584 # tamanho da janela
 s = 500 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(hit)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2567,7 +2572,7 @@ hit_resultados_3_backprop, hit_resultados_mse_treino_3_backprop, hit_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(hit_resultados_3_backprop).to_csv('resultados/hit_resultados_3_backprop.csv')
 pd.DataFrame(hit_resultados_mse_treino_3_backprop).to_csv('resultados/hit_resultados_mse_treino_3_backprop.csv')
@@ -2584,7 +2589,7 @@ hit_resultados_3_pso, hit_resultados_mse_treino_3_pso, hit_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_3_pso).to_csv('resultados/hit_resultados_3_pso.csv')
 pd.DataFrame(hit_resultados_mse_treino_3_pso).to_csv('resultados/hit_resultados_mse_treino_3_pso.csv')
@@ -2601,7 +2606,7 @@ hit_resultados_3_cqso, hit_resultados_mse_treino_3_cqso, hit_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_3_cqso).to_csv('resultados/hit_resultados_3_cqso.csv')
 pd.DataFrame(hit_resultados_mse_treino_3_cqso).to_csv('resultados/hit_resultados_mse_treino_3_cqso.csv')
@@ -2619,7 +2624,7 @@ pd.DataFrame(hit_resultados_mse_teste_3_cqso).to_csv('resultados/hit_resultados_
 
 w = 584 # tamanho da janela
 s = 584 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(hit)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2636,7 +2641,7 @@ hit_resultados_4_backprop, hit_resultados_mse_treino_4_backprop, hit_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(hit_resultados_4_backprop).to_csv('resultados/hit_resultados_4_backprop.csv')
 pd.DataFrame(hit_resultados_mse_treino_4_backprop).to_csv('resultados/hit_resultados_mse_treino_4_backprop.csv')
@@ -2654,7 +2659,7 @@ hit_resultados_4_pso, hit_resultados_mse_treino_4_pso, hit_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_4_pso).to_csv('resultados/hit_resultados_4_pso.csv')
 pd.DataFrame(hit_resultados_mse_treino_4_pso).to_csv('resultados/hit_resultados_mse_treino_4_pso.csv')
@@ -2671,7 +2676,7 @@ hit_resultados_4_cqso, hit_resultados_mse_treino_4_cqso, hit_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(hit_resultados_4_cqso).to_csv('resultados/hit_resultados_4_cqso.csv')
 pd.DataFrame(hit_resultados_mse_treino_4_cqso).to_csv('resultados/hit_resultados_mse_treino_4_cqso.csv')
@@ -2704,7 +2709,7 @@ X, y = split_sequence(hit_norm.values, qtd_inputs, 1)
 
 w = 510 # tamanho da janela
 s = 100 # tamanho do passo
-f = 50 # quantidade de iterações para a janela
+f = 50 # quantidade de iteracões para a janela
 T = int(f/s*(len(dmt)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2722,7 +2727,7 @@ dmt_resultados_1_backprop, dmt_resultados_mse_treino_1_backprop, dmt_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(dmt_resultados_1_backprop).to_csv('resultados/dmt_resultados_1_backprop.csv')
 pd.DataFrame(dmt_resultados_mse_treino_1_backprop).to_csv('resultados/dmt_resultados_mse_treino_1_backprop.csv')
@@ -2740,7 +2745,7 @@ dmt_resultados_1_pso, dmt_resultados_mse_treino_1_pso, dmt_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_1_pso).to_csv('resultados/dmt_resultados_1_pso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_1_pso).to_csv('resultados/dmt_resultados_mse_treino_1_pso.csv')
@@ -2757,7 +2762,7 @@ dmt_resultados_1_cqso, dmt_resultados_mse_treino_1_cqso, dmt_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_1_cqso).to_csv('resultados/dmt_resultados_1_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_1_cqso).to_csv('resultados/dmt_resultados_mse_treino_1_cqso.csv')
@@ -2773,7 +2778,7 @@ pd.DataFrame(dmt_resultados_mse_teste_1_cqso).to_csv('resultados/dmt_resultados_
 
 w = 510 # tamanho da janela
 s = 200 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(dmt)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2790,7 +2795,7 @@ dmt_resultados_2_backprop, dmt_resultados_mse_treino_2_backprop, dmt_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(dmt_resultados_2_backprop).to_csv('resultados/dmt_resultados_2_backprop.csv')
 pd.DataFrame(dmt_resultados_mse_treino_2_backprop).to_csv('resultados/dmt_resultados_mse_treino_2_backprop.csv')
@@ -2808,7 +2813,7 @@ dmt_resultados_2_pso, dmt_resultados_mse_treino_2_pso, dmt_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_2_pso).to_csv('resultados/dmt_resultados_2_pso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_2_pso).to_csv('resultados/dmt_resultados_mse_treino_2_pso.csv')
@@ -2825,7 +2830,7 @@ dmt_resultados_2_cqso, dmt_resultados_mse_treino_2_cqso, dmt_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_2_cqso).to_csv('resultados/dmt_resultados_2_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_2_cqso).to_csv('resultados/dmt_resultados_mse_treino_2_cqso.csv')
@@ -2841,7 +2846,7 @@ pd.DataFrame(dmt_resultados_mse_teste_2_cqso).to_csv('resultados/dmt_resultados_
 
 w = 510 # tamanho da janela
 s = 400 # tamanho do passo
-f = 150 # quantidade de iterações para a janela
+f = 150 # quantidade de iteracões para a janela
 T = int(f/s*(len(dmt)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2858,7 +2863,7 @@ dmt_resultados_3_backprop, dmt_resultados_mse_treino_3_backprop, dmt_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(dmt_resultados_3_backprop).to_csv('resultados/dmt_resultados_3_backprop.csv')
 pd.DataFrame(dmt_resultados_mse_treino_3_backprop).to_csv('resultados/dmt_resultados_mse_treino_3_backprop.csv')
@@ -2876,7 +2881,7 @@ dmt_resultados_3_pso, dmt_resultados_mse_treino_3_pso, dmt_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_3_pso).to_csv('resultados/dmt_resultados_3_pso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_3_pso).to_csv('resultados/dmt_resultados_mse_treino_3_pso.csv')
@@ -2893,7 +2898,7 @@ dmt_resultados_3_cqso, dmt_resultados_mse_treino_3_cqso, dmt_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_3_cqso).to_csv('resultados/dmt_resultados_3_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_3_cqso).to_csv('resultados/dmt_resultados_mse_treino_3_cqso.csv')
@@ -2909,7 +2914,7 @@ pd.DataFrame(dmt_resultados_mse_teste_3_cqso).to_csv('resultados/dmt_resultados_
 
 w = 510 # tamanho da janela
 s = 510 # tamanho do passo
-f = 100 # quantidade de iterações para a janela
+f = 100 # quantidade de iteracões para a janela
 T = int(f/s*(len(dmt)-w)+f)
 print(T)
 quantidade_janelas = int((len(y) - w)/s)
@@ -2927,7 +2932,7 @@ dmt_resultados_4_backprop, dmt_resultados_mse_treino_4_backprop, dmt_resultados_
                                                                                                                             f, quantidade_janelas, 
                                                                                                                             execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o backprop', (tac - tic))
+print('Tempo de execucao para o backprop', (tac - tic))
 
 pd.DataFrame(dmt_resultados_4_backprop).to_csv('resultados/dmt_resultados_4_backprop.csv')
 pd.DataFrame(dmt_resultados_mse_treino_4_backprop).to_csv('resultados/dmt_resultados_mse_treino_4_backprop.csv')
@@ -2945,7 +2950,7 @@ dmt_resultados_4_pso, dmt_resultados_mse_treino_4_pso, dmt_resultados_mse_teste_
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o PSO', (tac - tic))
+print('Tempo de execucao para o PSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_4_pso).to_csv('resultados/dmt_resultados_4_pso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_4_pso).to_csv('resultados/dmt_resultados_mse_treino_4_pso.csv')
@@ -2962,7 +2967,7 @@ dmt_resultados_4_cqso, dmt_resultados_mse_treino_4_cqso, dmt_resultados_mse_test
                                                                                                              f, quantidade_janelas, 
                                                                                                              execucoes = 30) 
 tac = time.time()
-print('Tempo de execução para o CQSO', (tac - tic))
+print('Tempo de execucao para o CQSO', (tac - tic))
 
 pd.DataFrame(dmt_resultados_4_cqso).to_csv('resultados/dmt_resultados_4_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_4_cqso).to_csv('resultados/dmt_resultados_mse_treino_4_cqso.csv')
