@@ -8,9 +8,7 @@ import cmath
 
 import matplotlib.pyplot as plt
 
-#get_ipython().run_line_magic('matplotlib', 'inline')
 plt.rcParams['figure.figsize'] = (12.0, 9.0) # set default size of plots
-
 
 ###  Modelo para Regressão Com backpropagation
 
