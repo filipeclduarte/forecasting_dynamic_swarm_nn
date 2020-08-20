@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # Funções úteis 
 import pandas as pd
 import numpy as np
