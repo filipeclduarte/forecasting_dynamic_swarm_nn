@@ -10,12 +10,8 @@ import matplotlib.pyplot as plt
 
 plt.rcParams['figure.figsize'] = (12.0, 9.0) # set default size of plots
 
-<<<<<<< Updated upstream
-###  Modelo para Regressão Com backpropagation
-=======
 
 ###  Modelo para Regressao Com backpropagation
->>>>>>> Stashed changes
 
 def layer_sizes2(X, Y, n_h=4):
     """
@@ -2972,6 +2968,5 @@ print('Tempo de execucao para o CQSO', (tac - tic))
 pd.DataFrame(dmt_resultados_4_cqso).to_csv('resultados/dmt_resultados_4_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_treino_4_cqso).to_csv('resultados/dmt_resultados_mse_treino_4_cqso.csv')
 pd.DataFrame(dmt_resultados_mse_teste_4_cqso).to_csv('resultados/dmt_resultados_mse_teste_4_cqso.csv')
-
 
 
