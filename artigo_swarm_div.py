@@ -1058,8 +1058,8 @@ def run(args):
         sp500 = pd.read_csv('dados/sp500.csv')
         sp500 = sp500['valor']
         qtd_inputs = 4
-        aws_norm = normalizar_serie(aws)
-        X, y = split_sequence(aws_norm.values, qtd_inputs, 1)
+        sp500_norm = normalizar_serie(sp500)
+        X, y = split_sequence(sp500_norm.values, qtd_inputs, 1)
         exp = {
             "exp1": [58, 10, 50],
             "exp2": [58, 20, 100],
