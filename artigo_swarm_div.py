@@ -878,12 +878,12 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
     return mse_treino, mse_val, mse_teste
 
 
-def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes):
+def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, qtd_execucoes):
     
-    mse_treino = np.zeros((execucoes, quantidade_janelas*f))
-    mse_teste = np.zeros((execucoes, quantidade_janelas*f))
+    mse_treino = np.zeros((qtd_execucoes, quantidade_janelas*f))
+    mse_teste = np.zeros((qtd_execucoes, quantidade_janelas*f))
 
-    for ex in np.arange(execucoes):
+    for ex in np.arange(qtd_execucoes):
         id_neuronios = [np.nanargmin(mse_val_cenarios[ex,:,f*janela]) for janela in range(quantidade_janelas)]
         for jan in np.arange(quantidade_janelas):
             mse_treino[ex, f*jan:f*jan+f] = mse_treino_cenarios[ex, id_neuronios[jan], f*jan:f*jan+f]
@@ -941,13 +941,13 @@ def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, data
     dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes(
         X, y, w, s, f, modelo=run_model, perc_treino=0.54, perc_val=0.24)
     dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(
-        dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, execucoes = 30) 
+        dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, qtd_execucoes = 3) 
     tac = time.time()
     print('### Tempo de execucao para o %s %s: %s' % (algoritmo, experimento, tac-tic))
 
-    output1 = "resultados/%s_resultados_%s_%s.csv" % (dataset, experimento, algoritmo)
-    output2 = "resultados/%s_resultados_mse_treino_%s_%s.csv" % (dataset, experimento, algoritmo)
-    output3 = "resultados/%s_resultados_mse_teste_%s_%s.csv" % (dataset, experimento, algoritmo)
+    output1 = "resultados/%s_resultados_%s_%s_%s.csv" % (dataset, experimento, algoritmo, cenario)
+    output2 = "resultados/%s_resultados_mse_treino_%s_%s_%s.csv" % (dataset, experimento, algoritmo, cenario)
+    output3 = "resultados/%s_resultados_mse_teste_%s_%s_%s.csv" % (dataset, experimento, algoritmo, cenario)
     pd.DataFrame(dados_resultados).to_csv(output1)
     pd.DataFrame(dados_resultados_mse_treino).to_csv(output2)
     pd.DataFrame(dados_resultados_mse_teste).to_csv(output3)
