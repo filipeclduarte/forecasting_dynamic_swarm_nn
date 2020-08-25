@@ -9,6 +9,7 @@ import argparse
 import random 
 import cmath
 import time
+import sys
 
 np.random.seed(3)
 plt.rcParams['figure.figsize'] = (12.0, 9.0) # set default size of plots
@@ -839,7 +840,7 @@ def cenarios_dinamicos(serie, window_size, step_size):
 
 
 # Criando cenários
-def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoes = 30):
+def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoes = 3):
     
     # gerando os cenários dinâmicos
     X_I = cenarios_dinamicos(X, w, s)
@@ -922,7 +923,7 @@ def avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenari
     
     return resultados, mse_treino, mse_teste
 
-def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, dataset):
+def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, dataset, cenario):
     """ Roda cada modelo para a serie e experimento dado 
     w = tamanho da janela
     s = tamanho do passo
@@ -933,6 +934,10 @@ def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, data
     quantidade_janelas = int((len(y) - w)/s)
     print('# Algoritmo: %s \n## Dataset: %s' % (algoritmo, experimento))
     print('### Quantidade total de iteracoes: ', T)
+    print('### Cenario %s' % cenario)
+    print('### Tamanho da janela (w): %s' % str(w))
+    print('### Tamanho do passo (s): %s' % str(s))
+    print('### Quantidade de iterações (f): %s' % str(f))
     dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes(
         X, y, w, s, f, modelo=run_model, perc_treino=0.54, perc_val=0.24)
     dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(
@@ -953,6 +958,7 @@ def run(args):
     # Organizando os parametros de entrada
     algoritmo = args.algoritmo.lower()
     dataset = args.dataset.lower()
+    cenario = str(args.cenario)
 
     if dataset == "sunspot":
         ## Sunspot
@@ -966,23 +972,18 @@ def run(args):
         sunspot_norm = normalizar_serie(sunspot)
         X, y = split_sequence(sunspot_norm.values, 10, 1)
         exp = {
-            "exp1": [60, 10, 50],
-            "exp2": [60, 20, 100],
-            "exp3": [60, 40, 150],
-            "exp4": [60, 60, 100]
+            "1": [60, 10, 50],
+            "2": [60, 20, 100],
+            "3": [60, 40, 150],
+            "4": [60, 60, 100]
         }
 
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
         else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
             
     elif dataset == "airline":
 
@@ -998,23 +999,18 @@ def run(args):
         airline_norm = normalizar_serie(airline)
         X, y = split_sequence(airline_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [32, 5, 50],
-            "exp2": [32, 10, 100],
-            "exp3": [32, 25, 150],
-            "exp4": [32, 32, 100]
+            "1": [32, 5, 50],
+            "2": [32, 10, 100],
+            "3": [32, 25, 150],
+            "4": [32, 32, 100]
         }
 
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
         else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
         
     elif dataset == "aws":
         ## AWS
@@ -1029,23 +1025,18 @@ def run(args):
         aws_norm = normalizar_serie(aws)
         X, y = split_sequence(aws_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [42, 5, 50],
-            "exp2": [42, 20, 100],
-            "exp3": [42, 35, 150],
-            "exp4": [42, 32, 100]
+            "1": [42, 5, 50],
+            "2": [42, 20, 100],
+            "3": [42, 35, 150],
+            "4": [42, 32, 100]
         }
 
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
-        else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
+        else:
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
         
     elif dataset == "sp500":
         ## S&P
@@ -1061,23 +1052,18 @@ def run(args):
         sp500_norm = normalizar_serie(sp500)
         X, y = split_sequence(sp500_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [58, 10, 50],
-            "exp2": [58, 20, 100],
-            "exp3": [58, 40, 150],
-            "exp4": [58, 58, 100]
+            "1": [58, 10, 50],
+            "2": [58, 20, 100],
+            "3": [58, 40, 150],
+            "4": [58, 58, 100]
         }
 
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
-        else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
+        else:
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
         
     elif dataset == "usd":
         ## USD
@@ -1092,23 +1078,17 @@ def run(args):
         usd_norm = normalizar_serie(usd)
         X, y = split_sequence(usd_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [20, 2, 50],
-            "exp2": [20, 8, 100],
-            "exp3": [20, 16, 150],
-            "exp4": [20, 20, 100]
+            "1": [20, 2, 50],
+            "2": [20, 8, 100],
+            "3": [20, 16, 150],
+            "4": [20, 20, 100]
         }
-
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
         else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
         
     elif dataset == "hit":
         ## HIT
@@ -1124,23 +1104,17 @@ def run(args):
         hit_norm = normalizar_serie(hit)
         X, y = split_sequence(hit_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [584, 100, 50],
-            "exp2": [584, 250, 100],
-            "exp3": [584, 500, 150],
-            "exp4": [584, 584, 50]
+            "1": [584, 100, 50],
+            "2": [584, 250, 100],
+            "3": [584, 500, 150],
+            "4": [584, 584, 50]
         }
-
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
         else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
         
     elif dataset == "dmt":
         ## DMT
@@ -1155,23 +1129,17 @@ def run(args):
         hit_norm = normalizar_serie(hit)
         X, y = split_sequence(hit_norm.values, qtd_inputs, 1)
         exp = {
-            "exp1": [510, 100, 50],
-            "exp2": [510, 200, 100],
-            "exp3": [510, 400, 150],
-            "exp4": [510, 510, 100]
+            "1": [510, 100, 50],
+            "2": [510, 200, 100],
+            "3": [510, 400, 150],
+            "4": [510, 510, 100]
         }
-
         if algoritmo == "backprop":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model2, experimento, algoritmo, dataset, cenario)
         elif algoritmo == "pso":
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset)
-
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_pso_todos, experimento, algoritmo, dataset, cenario)
         else: 
-            for cenario in exp:
-                run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset)
+            run_model_save_output(X, y, exp[cenario][0], exp[cenario][1], exp[cenario][2], nn_model_cqso_todos, experimento, algoritmo, dataset, cenario)
 
 def main():
     ''' Argumentos da funcao principal '''
@@ -1180,7 +1148,11 @@ def main():
         networks trained using particle swarm optimizers for dynamic environments""")
     parser.add_argument('-a', '--algoritmo', help='Algoritmos disponiveis: backprop, pso, cqso', type=str)
     parser.add_argument('-d', '--dataset', help='Datasets disponiveis para teste: sunspot, airline, aws, sp500, usd e hit', type=str)
+    parser.add_argument('-c', '--cenario', help='Numero do cenario a ser rodado, disponiveis: 1, 2, 3 e 4', type=str)
     parser.set_defaults(func=run)
+    if len(sys.argv) == 1:
+        parser.print_help()
+        sys.exit(1)
     args = parser.parse_args()
     args.func(args)
 
