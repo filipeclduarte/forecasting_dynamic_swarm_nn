@@ -1126,8 +1126,8 @@ def run(args):
         dmt = pd.read_csv('dados/daily_temp.csv')
         dmt = dmt['valor']
         qtd_inputs = 30
-        hit_norm = normalizar_serie(hit)
-        X, y = split_sequence(hit_norm.values, qtd_inputs, 1)
+        dmt_norm = normalizar_serie(dmt)
+        X, y = split_sequence(dmt_norm.values, qtd_inputs, 1)
         exp = {
             "1": [510, 100, 50],
             "2": [510, 200, 100],
