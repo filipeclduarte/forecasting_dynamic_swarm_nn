@@ -210,10 +210,10 @@ def nn_model2(X, Y, n_h, num_iteracoes, perc_treino, perc_val,print_cost = False
     Y -- labels de shape (1, qtd de examplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iteracões
+    print_cost -- se True, mostra o custo a cada 1000 iteracoes
     
     Retorna:
-    parameters -- parâmetros aprendidos pelo modelo. Eles podem ser utilizados para fazer previsões (predict).
+    parameters -- parâmetros aprendidos pelo modelo. Eles podem ser utilizados para fazer previsoes (predict).
     """
     
     treino_mse = []
@@ -405,7 +405,7 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
     
     atributos_dim_sum = sum(atributos_dim)
 
-    # inicializar as partículas em posicões aleatórias
+    # inicializar as partículas em posicoes aleatórias
     particulas = np.random.uniform(low = min_i, high = max_i, size = (qtd_particulas, atributos_dim_sum))
 
     # inicializar a velocidade
@@ -481,7 +481,7 @@ def PSO_todos(X,parameters_stacked, best_cost, fun, A2, Y, parameters, qtd_parti
                     gbest_value = fun(A2_part, Y_treino.T, parameters_temp_dict)
                     parameters_gbest_dict = parameters_temp_dict
                                       
-         # Iteracao para atualizar as posicões das partículas
+         # Iteracao para atualizar as posicoes das partículas
             for i in np.arange(qtd_particulas):
                 r1, r2 = np.random.rand(), np.random.rand()
                 velocidade[i, :] = w * velocidade[i, :] + c1 * r1 * (pbest[i, :] - particulas[i, :]) + c2 * r2 * (particulas[gbest, :] - particulas[i, :])
@@ -559,10 +559,10 @@ def nn_model_pso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_co
     Y -- labels de shape (1, qtd de exemplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iteracões
+    print_cost -- se True, mostra o custo a cada 1000 iteracoes
     
     Retorna:
-    parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsões (predict).
+    parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsoes (predict).
     """
     
     n_x = layer_sizes2(X[0].T, Y[0].T)[0]
@@ -795,10 +795,10 @@ def nn_model_cqso_todos(X, Y, n_h, num_iteracoes, perc_treino, perc_val, print_c
     Y -- labels de shape (1, qtd de exemplos)
     n_h -- tamanho da camada escondida
     num_iteracoes
-    print_cost -- se True, mostra o custo a cada 1000 iteracões
+    print_cost -- se True, mostra o custo a cada 1000 iteracoes
     
     Retorna:
-    parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsões (predict).
+    parameters -- parâmetros aprendidos pelo pso. Eles podem ser utilizados para fazer previsoes (predict).
     """
     
     n_x = layer_sizes2(X[0].T, Y[0].T)[0]
@@ -846,7 +846,7 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
     X_I = cenarios_dinamicos(X, w, s)
     y_I = cenarios_dinamicos(y, w, s)
  
-    # calculando a quantidade de iteracões
+    # calculando a quantidade de iteracoes
     T = int(f/s*(len(y)-w)+f)
     
     neuronios = np.arange(2, 26)
@@ -868,11 +868,11 @@ def cenarios_execucoes(X, y, w, s, f, modelo, perc_treino, perc_val,qtd_execucoe
                                                                                                  perc_treino=perc_treino, 
                                                                                                  perc_val=perc_val)
 
-            # salvar lista com os mse de treino para todas as iteracões
+            # salvar lista com os mse de treino para todas as iteracoes
             mse_treino[execucao, z,:] = np.array(mse_treino_lista_temp)
             # salvar lista com os mse de validacao para todas as iteracoes
             mse_val[execucao, z,:] = np.array(mse_val_lista_temp)
-            # salvar lista com os mse de teste para todas as iteracões
+            # salvar lista com os mse de teste para todas as iteracoes
             mse_teste[execucao, z,:] = np.array(mse_teste_lista_temp)
 
     return mse_treino, mse_val, mse_teste
@@ -927,7 +927,7 @@ def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, data
     """ Roda cada modelo para a serie e experimento dado 
     w = tamanho da janela
     s = tamanho do passo
-    f = quantidade de iteracões para a janela
+    f = quantidade de iteracoes para a janela
     """
     tic = time.time()
     T = int(f/s*(len(y)-w)+f)
@@ -937,7 +937,7 @@ def run_model_save_output(X, y, w, s, f, run_model, experimento, algoritmo, data
     print('### Cenario %s' % cenario)
     print('### Tamanho da janela (w): %s' % str(w))
     print('### Tamanho do passo (s): %s' % str(s))
-    print('### Quantidade de iterações (f): %s' % str(f))
+    print('### Quantidade de iteracoes (f): %s' % str(f))
     dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes(
         X, y, w, s, f, modelo=run_model, perc_treino=0.54, perc_val=0.24)
     dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(
