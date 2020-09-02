@@ -693,18 +693,18 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
     if algoritmo == "pso"
         
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_pso(X, y, w, s, f, 0.54, 0.24, 3)
-        dados_resultados, dados_resultados_mse_treino, dados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
+        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
 
     elseif algoritmo == "cqso"
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cqso(X, y, w, s, f, 0.54, 0.24, 3, 25, 0.2)
-        dados_resultados, dados_resultados_mse_treino, dados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
+        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
     
     end
 
     output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output2 = "resultados/$dataset"*"_resultados_mse_treino_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    CSV.write(output1,DataFrame(dados_resultados))
+    CSV.write(output1,DataFrame(dados_resultados'))
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
 
