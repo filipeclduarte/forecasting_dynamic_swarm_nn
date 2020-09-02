@@ -703,7 +703,7 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
 
     output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output2 = "resultados/$dataset"*"_resultados_mse_treino_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo_$cenario.csv"
+    output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo"*"_$cenario.csv"
     CSV.write(output1,DataFrame(dados_resultados))
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
@@ -919,5 +919,4 @@ end
 if abspath(PROGRAM_FILE) == @__FILE__
     main()
 end
-
 
