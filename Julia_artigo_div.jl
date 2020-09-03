@@ -679,11 +679,9 @@ end
 
 function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, cenario)
 
-    T = convert(Int64,floor(f/s*(size(y)[1]-w)+f))
     quantidade_janelas = convert(Int64,floor((size(y)[1] - w)/s))
 
     println("# Algoritmo: $algoritmo \n ## Dataset: $experimento")
-    println("### Quantidade total de iteracoes: ", T)
     println("### Cenario $cenario")
     println("### Tamanho da janela (w): $w")
     println("### Tamanho do passo (s): $s")
@@ -704,7 +702,7 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
     output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output2 = "resultados/$dataset"*"_resultados_mse_treino_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    CSV.write(output1,DataFrame(dados_resultados'))
+    CSV.write(output1,DataFrame(dados_resultados))
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
 
@@ -919,4 +917,5 @@ end
 if abspath(PROGRAM_FILE) == @__FILE__
     main()
 end
+
 
