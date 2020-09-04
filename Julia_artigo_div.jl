@@ -417,7 +417,6 @@ end
 function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float64, UB::Float64, perc_treino::Float64, perc_val::Float64, neutral_p::Int64, rcloud::Float64)
 
     n = sum(dim)
-    println("Dimensao: ", n)
     a = zeros(Int64, n)
 
     #a = Int64[]
@@ -501,7 +500,7 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
         # Iterações
         # Para cada sub_swarm em multi_swarm_vector
         iteration = 1
-        while iteration < max_iter
+        while iteration <= max_iter
 
             w=wmax-(wmax-wmin)*iteration/max_iter
 
@@ -598,9 +597,8 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
         mse_teste[it_idx] = mse_t
 
         iteration += 1
-
         it_idx += 1
-                
+            
             
         end
 
@@ -696,9 +694,8 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
 
     elseif algoritmo == "cqso"
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cqso(X, y, w, s, f, 0.54, 0.24, 3, 25, 0.2)
-        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 2)
-        println("Shape dados_resultados_mse_treino ", size(dados_resultados_mse_treino))
-        println("\n ", dados_resultados_mse_treino)
+        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
+
     end
 
     output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
