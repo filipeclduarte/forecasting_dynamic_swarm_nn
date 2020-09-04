@@ -361,13 +361,14 @@ end
 
 function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes)
     
-    mse_treino = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    #zeros(execucoes, quantidade_janelas*f)
-    mse_teste = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    #zeros(execucoes, quantidade_janelas*f)
+    #mse_treino = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
+    zeros(execucoes, quantidade_janelas*f)
+    #mse_teste = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
+    zeros(execucoes, quantidade_janelas*f)
     
     for ex in 1:execucoes
-        id_neuronios = Array{Int64, 1}(undef, quantidade_janelas)
+        id_neuronios = zeros(quantidade_janelas)
+        #id_neuronios = Array{Int64, 1}(undef, quantidade_janelas)
         for janela in 1:quantidade_janelas
             id_neuronios[janela] = findmin(mse_val_cenarios[ex, :, f*janela])[2]
         end
@@ -580,25 +581,25 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
                     parametros_gbest = copy(sub_swarm_pbest)
                 end
             end
-#            parameters_gbest = params_reshape(reshape(context_vector, n), parameters)
+            #parameters_gbest = params_reshape(reshape(context_vector, n), parameters)
             #parameters_gbest = params_reshape(context_vector, parameters)    
-            parameters_gbest = params_reshape(parametros_gbest, parameters)
-            
-            A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
-            mse_tv = compute_cost(A2_gbest_tv, Y_tv)
-            mse_treino[it_idx] = mse_tv
+        parameters_gbest = params_reshape(parametros_gbest, parameters)
+        
+        A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
+        mse_tv = compute_cost(A2_gbest_tv, Y_tv)
+        mse_treino[it_idx] = mse_tv
 
-            A2_gbest_v = forward_prop(X_val', parameters_gbest)
-            mse_v = compute_cost(A2_gbest_v, Y_val')
-            mse_val[it_idx] = mse_v
+        A2_gbest_v = forward_prop(X_val', parameters_gbest)
+        mse_v = compute_cost(A2_gbest_v, Y_val')
+        mse_val[it_idx] = mse_v
 
-            A2_gbest_t = forward_prop(X_teste', parameters_gbest)
-            mse_t = compute_cost(A2_gbest_t, Y_teste')
-            mse_teste[it_idx] = mse_t
+        A2_gbest_t = forward_prop(X_teste', parameters_gbest)
+        mse_t = compute_cost(A2_gbest_t, Y_teste')
+        mse_teste[it_idx] = mse_t
 
-            iteration += 1
+        iteration += 1
 
-            it_idx += 1
+        it_idx += 1
                 
             
         end
@@ -695,14 +696,15 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
 
     elseif algoritmo == "cqso"
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cqso(X, y, w, s, f, 0.54, 0.24, 3, 25, 0.2)
-        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
-    
+        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 2)
+        println("Shape dados_resultados_mse_treino ", size(dados_resultados_mse_treino))
+        println("\n ", dados_resultados_mse_treino)
     end
 
     output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output2 = "resultados/$dataset"*"_resultados_mse_treino_$experimento"*"_$algoritmo"*"_$cenario.csv"
     output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    CSV.write(output1,DataFrame(dados_resultados))
+    CSV.write(output1,DataFrame(dados_resultados'))
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
 
