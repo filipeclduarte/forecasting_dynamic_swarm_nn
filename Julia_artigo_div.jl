@@ -368,8 +368,7 @@ function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_c
     mse_teste = zeros(execucoes, quantidade_janelas*f)
     
     for ex in 1:execucoes
-        id_neuronios = zeros(quantidade_janelas)
-        #id_neuronios = Array{Int64, 1}(undef, quantidade_janelas)
+        id_neuronios = Array{Int64, 1}(undef, quantidade_janelas)
         for janela in 1:quantidade_janelas
             id_neuronios[janela] = findmin(mse_val_cenarios[ex, :, f*janela])[2]
         end
