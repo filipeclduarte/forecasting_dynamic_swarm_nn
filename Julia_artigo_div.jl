@@ -27,6 +27,7 @@ function forward_prop(x, params)
     out = 1.7159*tanh.(2/3*linear2)
     
     return out
+
 end
 
 function compute_cost(A2, y)
@@ -362,9 +363,9 @@ end
 function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes)
     
     #mse_treino = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    zeros(execucoes, quantidade_janelas*f)
+    mse_treino = zeros(execucoes, quantidade_janelas*f)
     #mse_teste = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    zeros(execucoes, quantidade_janelas*f)
+    mse_teste = zeros(execucoes, quantidade_janelas*f)
     
     for ex in 1:execucoes
         id_neuronios = zeros(quantidade_janelas)
@@ -695,12 +696,11 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
     elseif algoritmo == "cqso"
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cqso(X, y, w, s, f, 0.54, 0.24, 3, 25, 0.2)
         dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
-
     end
 
-    output1 = "resultados/$dataset"*"_resultados_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    output2 = "resultados/$dataset"*"_resultados_mse_treino_$experimento"*"_$algoritmo"*"_$cenario.csv"
-    output3 = "resultados/$dataset"*"_resultados_mse_teste_$experimento"*"_$algoritmo"*"_$cenario.csv"
+    output1 = "resultados/$(dataset)_resultados_$(experimento)_$(algoritmo)_$(cenario).csv"
+    output2 = "resultados/$(dataset)_resultados_mse_treino_$(experimento)_$(algoritmo)_$(cenario).csv"
+    output3 = "resultados/$(dataset)_resultados_mse_teste_$(experimento)_$(algoritmo)_$(cenario).csv"
     CSV.write(output1,DataFrame(dados_resultados'))
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
