@@ -362,10 +362,8 @@ end
 
 function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_cenarios, f, quantidade_janelas, execucoes)
     
-    #mse_treino = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    mse_treino = zeros(execucoes, quantidade_janelas*f)
-    #mse_teste = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
-    mse_teste = zeros(execucoes, quantidade_janelas*f)
+    mse_treino = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
+    mse_teste = Array{Float64, 2}(undef, execucoes, quantidade_janelas*f)
     
     for ex in 1:execucoes
         id_neuronios = Array{Int64, 1}(undef, quantidade_janelas)
