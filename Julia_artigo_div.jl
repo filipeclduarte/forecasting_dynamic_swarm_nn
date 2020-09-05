@@ -417,11 +417,8 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
     n = sum(dim)
     a = zeros(Int64, n)
 
-    #a = Int64[]
-
     for i in 2:n
         if n%i == 0
-            #push!(a, i)
             a[i] = i
         end
     end
@@ -429,8 +426,8 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
     n_sub_swarms = sort(a[a.!=0])[1]
 
     # divide the dimensions per subswarm
-    num = n
-    div = n_sub_swarms
+    num = copy(n)
+    div = copy(n_sub_swarms)
 
     dimensions_list = zeros(Int64, div)
 
@@ -444,7 +441,6 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
 
     #context_vector = zeros(n_sub_swarms, n_sub_swarms)
     context_vector = zeros(n_sub_swarms, n)
-    
     
     # Create a multiswarm and his velocities
     #multi_swarm_vector = zeros(n_sub_swarms, n_particles, dimensions_list[1])
@@ -575,28 +571,28 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
                     gbest = copy(pbest)
                     gbest_value = copy(pbest_value)
                     context_vector[i_sub_swarm, :] = copy(sub_swarm_pbest)
-                    parametros_gbest = copy(sub_swarm_pbest)
+                    # parametros_gbest = copy(sub_swarm_pbest)
                 end
             end
-            #parameters_gbest = params_reshape(reshape(context_vector, n), parameters)
-            #parameters_gbest = params_reshape(context_vector, parameters)    
-        parameters_gbest = params_reshape(parametros_gbest, parameters)
         
-        A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
-        mse_tv = compute_cost(A2_gbest_tv, Y_tv)
-        mse_treino[it_idx] = mse_tv
+            # parameters_gbest = params_reshape(parametros_gbest, parameters)
+            parameters_gbest = params_reshape(gbest, parameters)
 
-        A2_gbest_v = forward_prop(X_val', parameters_gbest)
-        mse_v = compute_cost(A2_gbest_v, Y_val')
-        mse_val[it_idx] = mse_v
+            A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
+            mse_tv = compute_cost(A2_gbest_tv, Y_tv)
+            mse_treino[it_idx] = mse_tv
 
-        A2_gbest_t = forward_prop(X_teste', parameters_gbest)
-        mse_t = compute_cost(A2_gbest_t, Y_teste')
-        mse_teste[it_idx] = mse_t
+            A2_gbest_v = forward_prop(X_val', parameters_gbest)
+            mse_v = compute_cost(A2_gbest_v, Y_val')
+            mse_val[it_idx] = mse_v
 
-        iteration += 1
-        it_idx += 1
-            
+            A2_gbest_t = forward_prop(X_teste', parameters_gbest)
+            mse_t = compute_cost(A2_gbest_t, Y_teste')
+            mse_teste[it_idx] = mse_t
+
+            iteration += 1
+            it_idx += 1
+                
             
         end
 
@@ -610,9 +606,6 @@ function n_model_cqso(X, y, n_h::Int64, num_iteracoes::Int64, perc_treino::Float
     parametros = init_params(n_in, n_h)
     
     println("Neuronios: ", n_h)
-#     A2 = forward_prop(X', parametros)
-
-#     best_cost = compute_cost(A2, y')
     
     W1 = parametros[1]
     b1 = parametros[2]
