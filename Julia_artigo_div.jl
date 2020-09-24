@@ -15,7 +15,6 @@ function init_params(n_in::Int64, n_h::Int64)
     return [W1, b1, W2, b2]
 end
 
-
 function forward_prop(x, params)
     W1 = params[1]
     b1 = params[2]
@@ -274,6 +273,7 @@ function n_model_pso(X, y, n_h::Int64, num_iteracoes::Int64, perc_treino::Float6
     return mse_treino, mse_val, mse_teste
 end
 
+
 # janelamento para cenários dinâmicos
 function cenarios_dinamicos(serie, window_size::Int64, step_size::Int64)
     
@@ -426,8 +426,8 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
     n_sub_swarms = sort(a[a.!=0])[1]
 
     # divide the dimensions per subswarm
-    num = copy(n)
-    div = copy(n_sub_swarms)
+    num = n
+    div = n_sub_swarms
 
     dimensions_list = zeros(Int64, div)
 
@@ -439,20 +439,15 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
             end
     end
 
-    #context_vector = zeros(n_sub_swarms, n_sub_swarms)
     context_vector = zeros(n_sub_swarms, n)
     
     # Create a multiswarm and his velocities
-    #multi_swarm_vector = zeros(n_sub_swarms, n_particles, dimensions_list[1])
     multi_swarm_vector = zeros(n_sub_swarms, n_particles, n)
-    #velocity_vector = zeros(n_sub_swarms, n_particles, dimensions_list[1])
     velocity_vector = zeros(n_sub_swarms, n_particles, n)
     
     for i_subswarm in 1:n_sub_swarms
-        #context_vector[i_subswarm, :] = rand(Uniform(-1.0, 1.0), n_sub_swarms)
         context_vector[i_subswarm, :] = rand(Uniform(-1.0, 1.0), n)
         for i_particle in 1:n_particles
-            #multi_swarm_vector[i_subswarm, i_particle,:] = rand(Uniform(-1.0, 1.0), dimensions_list[1])
             multi_swarm_vector[i_subswarm, i_particle, :] = rand(Uniform(-1.0, 1.0), n)
         end
     end
@@ -460,11 +455,9 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
     gbest = copy(multi_swarm_vector[1,1,:])
     pbest = copy(multi_swarm_vector[1,1,:])
 
-    #sub_swarm_pbest = copy(context_vector)
     sub_swarm_pbest = copy(context_vector[1,:])
     parameters = copy(params)
 
-    #parametros = params_reshape(reshape(context_vector, n), parameters)
     parametros = params_reshape(sub_swarm_pbest, parameters)
     
     y_pred = forward_prop(X[:,:,1]', parametros)
@@ -485,6 +478,7 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
     it_idx = 1
 
     for janela in 1:size(y)[2]
+    
 
         X_treino, Y_treino, X_teste, Y_teste, X_val, Y_val = divisao_dados_temporais(X[:,:, janela], y[:, janela], perc_treino, perc_val)
 
@@ -505,13 +499,9 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
 
                     # Calcular o fitness 
                     context_copy = copy(context_vector)
-                    #conetxt_copy = copy(context_vector[i_sub_swarm,:])
-
                     particle = copy(multi_swarm_vector[i_sub_swarm,i_particle,:])
                     context_copy[i_sub_swarm, :] = copy(particle)
 
-                    #parameters_temp = params_reshape(reshape(context_copy, n), parameters)
-                    #parameters_temp = params_reshape(reshape(context_copy[i_sub_swarm,:], n), parameters)
                     parameters_temp = params_reshape(context_copy[i_sub_swarm, :], parameters)
                     
                     A2_part = forward_prop(X_treino', parameters_temp)
@@ -522,8 +512,7 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
                         pbest = copy(multi_swarm_vector[i_sub_swarm, i_particle, :])
                         pbest_value = copy(fitness_candidate)
                         sub_swarm_pbest = copy(context_copy[i_sub_swarm, :])
-
-                        # feito o pbest devemos atualizar as posições das particulas
+                         # feito o pbest devemos atualizar as posições das particulas
                     end
 
                     if i_particle <= (neutral_p - 1)  
@@ -538,9 +527,7 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
                     else
                         # atualiza como QSO
                         dist = sqrt(sum((multi_swarm_vector[i_sub_swarm, i_particle, :] .- gbest).^2))
-                        #normal = rand(Normal(0,1), dimensions_list[i_sub_swarm])
                         normal = rand(Normal(0, 1), n)
-                        #uniform = rand(dimensions_list[i_sub_swarm])
                         uniform = rand(n)
                         left_size_form = rcloud .* normal
                         
@@ -571,34 +558,33 @@ function CQSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float6
                     gbest = copy(pbest)
                     gbest_value = copy(pbest_value)
                     context_vector[i_sub_swarm, :] = copy(sub_swarm_pbest)
-                    # parametros_gbest = copy(sub_swarm_pbest)
+                    parametros_gbest = copy(sub_swarm_pbest)
                 end
             end
-        
-            # parameters_gbest = params_reshape(parametros_gbest, parameters)
-            parameters_gbest = params_reshape(gbest, parameters)
+        parameters_gbest = params_reshape(parametros_gbest, parameters)
 
-            A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
-            mse_tv = compute_cost(A2_gbest_tv, Y_tv)
-            mse_treino[it_idx] = mse_tv
+        A2_gbest_tv = forward_prop(X_tv, parameters_gbest)
+        mse_tv = compute_cost(A2_gbest_tv, Y_tv)
+        mse_treino[it_idx] = mse_tv
 
-            A2_gbest_v = forward_prop(X_val', parameters_gbest)
-            mse_v = compute_cost(A2_gbest_v, Y_val')
-            mse_val[it_idx] = mse_v
+        A2_gbest_v = forward_prop(X_val', parameters_gbest)
+        mse_v = compute_cost(A2_gbest_v, Y_val')
+        mse_val[it_idx] = mse_v
 
-            A2_gbest_t = forward_prop(X_teste', parameters_gbest)
-            mse_t = compute_cost(A2_gbest_t, Y_teste')
-            mse_teste[it_idx] = mse_t
+        A2_gbest_t = forward_prop(X_teste', parameters_gbest)
+        mse_t = compute_cost(A2_gbest_t, Y_teste')
+        mse_teste[it_idx] = mse_t
 
-            iteration += 1
-            it_idx += 1
-                
+        iteration += 1
+
+        it_idx += 1
             
         end
 
     end
     return mse_treino, mse_val, mse_teste   
 end
+
 function n_model_cqso(X, y, n_h::Int64, num_iteracoes::Int64, perc_treino::Float64, perc_val::Float64, neutral_p::Int64, rcloud::Float64)
     
     n_in = size(X)[2]
@@ -665,6 +651,194 @@ function cenarios_execucoes_cqso(X, y, w, s, f::Int64, perc_treino::Float64, per
     end
     return mse_treino, mse_val, mse_teste
 end
+
+function CDW_PSO(X, y, params, n_particles::Int64, dim, max_iter::Int64, LB::Float64, UB::Float64, perc_treino::Float64, perc_val::Float64)
+    
+    mse_treino = zeros(size(y)[2]*max_iter)
+    mse_val = zeros(size(y)[2]*max_iter)
+    mse_teste = zeros(size(y)[2]*max_iter)
+    
+    particles = rand(n_particles, sum(dim))
+    velocity = zeros(n_particles, sum(dim))
+    pbest = particles
+    gbest = pbest[1,:]
+    
+    parametros = params_reshape(gbest, params)
+    y_pred = forward_prop(X[:,:,1]', parametros)
+    gbest_value = compute_cost(y_pred, y[:,1]')    
+
+    fitness_value = zeros(n_particles)
+
+    for i in eachindex(fitness_value)
+        parametros = params_reshape(particles[i,:], params)
+        y_pred = forward_prop(X[:,:,1]', parametros)
+        fitness_value[i] = compute_cost(y_pred, y[:,1]')
+    end
+    
+    c1 = 1.5
+    c2 = 1.5
+    
+    iteracao = 1
+    for janela in 1:size(y)[2]
+        
+        X_treino, Y_treino, X_teste, Y_teste, X_val, Y_val = divisao_dados_temporais(X[:,:,janela], y[:,janela], perc_treino, perc_val)
+        
+        X_tv = vcat(X_treino, X_val)'
+        Y_tv = vcat(Y_treino, Y_val)'
+        
+        w = rand()
+        u_array = zeros(n_particles)
+        for k in 1:max_iter
+
+            # evaluating fitness
+            for i in 1:n_particles
+                parametros = params_reshape(particles[i,:], params)
+                y_pred = forward_prop(X_treino', parametros)
+                fitness_value[i] = compute_cost(y_pred, Y_treino')
+                if k == 0
+                   u_array[i] = copy(fitness_value[i])
+                end
+            end
+            # updating pbest and fitness
+            for i in 1:n_particles
+                parametros_pbest = params_reshape(pbest[i, :], params)
+                y_pred_pbest = forward_prop(X_treino', parametros_pbest)
+                if fitness_value[i] < compute_cost(y_pred_pbest, Y_treino')
+                    pbest[i, :] = particles[i, :]
+                end
+            end            
+            
+            # Update velocity
+            u = mean(u_array)
+            w = 0.125*sin(pi * w)
+            for i in 1:n_particles
+                for j in 1:sum(dim)
+                    velocity[i, j] = w*velocity[i,j] + c1*rand()*(pbest[i,j] - particles[i,j]) + c2*rand()*(gbest[j] - particles[i,j])
+                end
+            end
+
+            for i in 1:n_particles
+                peta = rand()
+                parametros = params_reshape(particles[i, :], params)
+                y_pred = forward_prop(X_treino', parametros)
+                fitness_candidate = compute_cost(y_pred, Y_treino')
+                psi_num = exp(fitness_candidate / u)
+                if psi_num == Inf
+                   psi_num = rand() 
+                end
+                psi_den = (1 + exp(-fitness_candidate / u))^k
+                psi = psi_num / psi_den
+                particles[i, :] = (particles[i, :].*psi) .+ (velocity[i, :].*(1.0 .-psi)) .+ (peta.*gbest[i].*psi)
+            end
+            
+            # handling boundary violations 
+            for i in 1:n_particles
+                for j in 1:sum(dim)
+                    if particles[i,j]<LB 
+                        particles[i,j]=LB 
+                    elseif particles[i,j]>UB 
+                        particles[i,j]=UB 
+                    end
+                end 
+            end 
+
+            # updating gbest 
+            for i in 1:n_particles    
+                if fitness_value[i] < gbest_value
+                    gbest_value = fitness_value[i]
+                    gbest = particles[i,:]   
+                end
+            end
+    
+            parametros_gbest = params_reshape(gbest, params)
+            # treino e validacao mse
+            A2_gbest_tv = forward_prop(X_tv, parametros_gbest)
+            mse_tv = compute_cost(A2_gbest_tv, Y_tv)
+            mse_treino[iteracao] = mse_tv
+
+
+            # validacao mse
+            A2_gbest_v = forward_prop(X_val', parametros_gbest)
+            mse_v = compute_cost(A2_gbest_v, Y_val')
+            mse_val[iteracao] = mse_v
+
+
+            # teste
+            A2_gbest_t = forward_prop(X_teste', parametros_gbest)
+            mse_t = compute_cost(A2_gbest_t, Y_teste')
+            mse_teste[iteracao] = mse_t
+
+            iteracao += 1
+        end
+    end
+    return mse_treino, mse_val, mse_teste
+end
+
+function n_model_cdw_pso(X, y, n_h::Int64, num_iteracoes::Int64, perc_treino::Float64, perc_val::Float64)
+    n_in = size(X)[2]
+    parametros = init_params(n_in, n_h)
+    
+#     A2 = forward_prop(X', parametros)
+
+#     best_cost = compute_cost(A2, y')
+    
+    W1 = parametros[1]
+    b1 = parametros[2]
+    W2 = parametros[3]
+    b2 = parametros[4]
+    
+    dim_list = [prod(size(W1)), prod(size(b1)), prod(size(W2)), prod(size(b2))]
+    
+    qtd_particulas_dim = convert(Int64,(size(W1)[2] + 1) * size(W1)[1] + (size(W1)[1] + 1)* size(W2)[1])
+
+    mse_treino, mse_val, mse_teste = CDW_PSO(X, y, parametros, qtd_particulas_dim, dim_list, num_iteracoes, -1.0, 1.0, perc_treino, perc_val)
+        
+    return mse_treino, mse_val, mse_teste
+end
+
+# Criando cenários
+function cenarios_execucoes_cdw_pso(X, y, w, s, f::Int64, perc_treino::Float64, perc_val::Float64,qtd_execucoes::Int64)
+    
+    # gerando os cenários dinâmicos
+    X_I = cenarios_dinamicos(X, w, s)
+    y_I = cenarios_dinamicos(y, w, s)
+ 
+    # calculando a quantidade de iterações
+    T = f * size(y_I)[2] 
+
+    println("Quantidade de iterações: ", T)
+    
+    neuronios = 2:25
+    
+    mse_treino = zeros(qtd_execucoes, size(neuronios)[1], size(y_I)[2] * f)
+    mse_val = zeros(qtd_execucoes, size(neuronios)[1], size(y_I)[2] * f)
+    mse_teste = zeros(qtd_execucoes, size(neuronios)[1], size(y_I)[2] * f)
+ 
+    execucoes = 1:qtd_execucoes
+
+    for execucao in eachindex(execucoes)
+
+        println("Execução: ", execucao)
+        
+        # Neuronios
+        for (j,z) in zip(neuronios, eachindex(neuronios))
+            
+            println("Neurônios: ", j)
+            
+            mse_treino_lista_temp, mse_val_lista_temp, mse_teste_lista_temp = n_model_cdw_pso(X_I, y_I, j, f, perc_treino, perc_val)
+
+            # salvar lista com os mse de treino para todas as iterações
+            mse_treino[execucao, z,:] = mse_treino_lista_temp
+            # salvar lista com os mse de validacao para todas as iteracoes
+            mse_val[execucao, z,:] = mse_val_lista_temp
+            # salvar lista com os mse de teste para todas as iterações
+            mse_teste[execucao, z,:] = mse_teste_lista_temp
+
+        end
+    end
+    return mse_treino, mse_val, mse_teste
+end
+            
             
 
 function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, cenario)
@@ -686,7 +860,12 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
     elseif algoritmo == "cqso"
         @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cqso(X, y, w, s, f, 0.54, 0.24, 3, 25, 0.2)
         dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
+
+    elseif algoritmo == "cdw_pso"
+        @time dados_mse_treino, dados_mse_val, dados_mse_teste = cenarios_execucoes_cdw_pso(X, y, w, s, f, 0.54,0.24, 3)
+        dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
     end
+
 
     output1 = "resultados/$(dataset)_resultados_$(experimento)_$(algoritmo)_$(cenario).csv"
     output2 = "resultados/$(dataset)_resultados_mse_treino_$(experimento)_$(algoritmo)_$(cenario).csv"
@@ -695,9 +874,7 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
     CSV.write(output2,DataFrame(dados_resultados_mse_treino))
     CSV.write(output3,DataFrame(dados_resultados_mse_teste))
 
-
 end
-
 
 function run(args)
 
@@ -725,6 +902,9 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
         end
 
     elseif dataset == "airline"
@@ -746,6 +926,9 @@ function run(args)
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
         elseif algoritmo == "cqso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
         end
@@ -771,6 +954,10 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3], 
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        
         end
         
     elseif dataset == "sp500"
@@ -793,6 +980,10 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        
         end
 
     elseif dataset == "usd"
@@ -815,6 +1006,10 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        
         end
         
     elseif dataset == "hit"
@@ -837,6 +1032,10 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        
         end
 
     elseif dataset == "dmt"
@@ -859,6 +1058,10 @@ function run(args)
         elseif algoritmo == "cqso"
             run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
             experimento, algoritmo, dataset, cenario)
+        elseif algoritmo == "cdw_pso"
+            run_model_save_output(X, y, exp[cenario][1], exp[cenario][2], exp[cenario][3],
+            experimento, algoritmo, dataset, cenario)
+        
         end
 
     end
@@ -873,12 +1076,12 @@ function parse_commandline()
     @add_arg_table! s begin
 
         "--algoritmo", "-a"
-            help = "Algoritmos disponíveis: PSO e CQSO"
+            help = "Algoritmos disponíveis: PSO, CQSO e CDW_PSO"
             arg_type = String
             required = true
 
         "--dataset", "-d"
-            help = "Datasets disponíveis para teste: sunspot, ariline, aws, sp500, usd e hit"
+            help = "Datasets disponíveis para teste: sunspot, ariline, aws, sp500, usd, hit e dmt"
             arg_type = String
             required = true
 
