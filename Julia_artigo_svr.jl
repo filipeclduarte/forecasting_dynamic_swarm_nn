@@ -10,7 +10,6 @@ using ScikitLearn
 
 Random.seed!(123);
 
-
 # normalizar serie
 function normalizar(serie)
     max = maximum(serie)
@@ -87,27 +86,27 @@ function compute_cost(pred, y)
     return cost
 end
 
+# PSO function
 function PSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Float64, perc_val::Float64)
     
     mse_treino = zeros(size(y)[2]*max_iter)
     mse_val = zeros(size(y)[2]*max_iter)
     mse_teste = zeros(size(y)[2]*max_iter)
     
-#     dim = 10 * n_particles
-    dim = 50
+    dim = 3
     
-    particles = zeros(dim, n_particles)
-    particles[:,1] = rand(Uniform(LB[1], UB[1]), dim)
-    particles[:, 2] = rand(Uniform(LB[2], UB[2]), dim)
-    particles[:, 3] = rand(Uniform(LB[3], UB[3]), dim)
+    particles = zeros(n_particles, dim)
+    particles[:, 1] = rand(Uniform(LB[1], UB[1]), n_particles)
+    particles[:, 2] = rand(Uniform(LB[2], UB[2]), n_particles)
+    particles[:, 3] = rand(Uniform(LB[3], UB[3]), n_particles)
     
-    velocity = zeros(dim, n_particles)
+    velocity = zeros(n_particles, dim)
     
     modelo = fit!(SVR(kernel = "rbf", C = particles[1,1], epsilon = particles[1, 2], gamma = particles[1,3]), X[:,:,1], y[:, 1])
     y_pred = predict(modelo, X[:,:,1])
     gbest_value = compute_cost(y_pred, y[:,1])    
 
-    fitness_value = zeros(dim)
+    fitness_value = zeros(n_particles)
 
     for i in eachindex(fitness_value)
         modelo = fit!(SVR(kernel = "rbf", C = particles[i,1], epsilon = particles[i, 2], gamma = particles[i,3]), X[:,:,1], y[:, 1])
@@ -135,18 +134,14 @@ function PSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Flo
         for k in 1:max_iter
             w=wmax-(wmax-wmin)*k/max_iter
         
-            for i in 1:dim
+            for i in 1:n_particles
                 velocity[i, :] = w*velocity[i,:] .+ c1*rand().*(pbest[i,:] .- particles[i,:]) .+ c2*rand().*(gbest[:] .- particles[i,:])
+                particles[i,:] = particles[i,:] .+ velocity[i,:]
             end
             
-            # update pso position
-            for i in 1:dim
-                    particles[i,:] = particles[i,:] .+ velocity[i,:]
-                end
-
             # handling boundary violations 
-            for i in 1:dim
-                for j in 1:n_particles
+            for i in 1:n_particles
+                for j in 1:dim
                     if particles[i,j]<LB[j] 
                         particles[i,j]=LB[j] 
                     elseif particles[i,j]>UB[j] 
@@ -160,24 +155,39 @@ function PSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Flo
                 modelo = fit!(SVR(kernel = "rbf", C = particles[i,1], epsilon = particles[i, 2], gamma = particles[i,3]), X_treino, Y_treino)
                 y_pred = predict(modelo, X_treino)
                 fitness_value[i] = compute_cost(y_pred, Y_treino)
-            end
-
-            # updating pbest and fitness
-            for i in 1:dim
-                modelo = fit!(SVR(kernel = "rbf", C = pbest[i,1], epsilon = pbest[i, 2], gamma = pbest[i,3]), X_treino, Y_treino)
+                
+                # pbest
+                modelo_pbest = fit!(SVR(kernel = "rbf", C = pbest[i,1], epsilon = pbest[i, 2], gamma = pbest[i,3]), X_treino, Y_treino)
                 y_pred_pbest = predict(modelo, X_treino)
+
                 if fitness_value[i] < compute_cost(y_pred_pbest, Y_treino)
                     pbest[i, :] = copy(particles[i, :])
                 end
-            end
-
-            # updating gbest 
-            for i in 1:dim    
+                
+                # gbest
                 if fitness_value[i] < gbest_value
                     gbest_value = fitness_value[i]
                     gbest = copy(particles[i,:])   
                 end
+
             end
+
+            # updating pbest and fitness
+            # for i in 1:n_particles
+            #     modelo_pbest = fit!(SVR(kernel = "rbf", C = pbest[i,1], epsilon = pbest[i, 2], gamma = pbest[i,3]), X_treino, Y_treino)
+            #     y_pred_pbest = predict(modelo, X_treino)
+            #     if fitness_value[i] < compute_cost(y_pred_pbest, Y_treino)
+            #         pbest[i, :] = copy(particles[i, :])
+            #     end
+            # end
+
+            # updating gbest 
+            # for i in 1:n_particles    
+            #     if fitness_value[i] < gbest_value
+            #         gbest_value = fitness_value[i]
+            #         gbest = copy(particles[i,:])   
+            #     end
+            # end
     
             # treinamento mse
             modelo_iter = fit!(SVR(kernel = "rbf", C = gbest[1], epsilon = gbest[2], gamma = gbest[3]), X_tv, Y_tv)
@@ -216,14 +226,11 @@ end
 
 function svr_model_pso(X, y, num_iteracoes::Int64, perc_treino::Float64, perc_val::Float64)
 
-    parametros = init_params()
-    
-    qtd_particulas_dim = length(parametros)    
     
     LB = [1, 1e-5, 1e-2]
     UB = [1000, 1e-3, 1]
     
-    mse_treino, mse_val, mse_teste = PSO(X, y, qtd_particulas_dim, num_iteracoes, LB, UB, perc_treino, perc_val)
+    mse_treino, mse_val, mse_teste = PSO(X, y, 50, num_iteracoes, LB, UB, perc_treino, perc_val)
         
     return mse_treino, mse_val, mse_teste
 end
@@ -347,9 +354,10 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
     mse_val = zeros(size(y)[2]*max_iter)
     mse_teste = zeros(size(y)[2]*max_iter)
     
-#     dim = 10 * n_particles
-    dim = 50
-    n = sum(dim)
+    # quantidade de colunas
+    dim = 3
+
+    n = n_particles
     a = zeros(Int64, n)
 
     for i in 2:n
@@ -374,16 +382,16 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
         end
     end
 
-    context_vector = zeros(n_sub_swarms, n_particles)
+    context_vector = zeros(n_sub_swarms, dim)
 
     # Create a multiswarm and his velocities
-    multi_swarm_vector = zeros(n_sub_swarms, n, n_particles)
-    velocity_vector = zeros(n_sub_swarms, n, n_particles)
+    multi_swarm_vector = zeros(n_sub_swarms, n, dim)
+    velocity_vector = zeros(n_sub_swarms, n, dim)
     
     for i_subswarm in 1:n_sub_swarms  
         for i_particle in 1:n_particles
-            context_vector[i_subswarm, i_particle] = rand(Uniform(LB[i_particle], UB[i_particle]))
-            for j_particle in 1:n_particles
+            for j_particle in 1:dim
+                context_vector[i_subswarm, j_particle] = rand(Uniform(LB[j_particle], UB[j_particle]))
                 multi_swarm_vector[i_subswarm, i_particle, j_particle] = rand(Uniform(LB[j_particle], UB[j_particle]))
             end
         end
@@ -410,7 +418,6 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
     it_idx = 1
 
     for janela in 1:size(y)[2]
-    
 
         X_treino, Y_treino, X_teste, Y_teste, X_val, Y_val = divisao_dados_temporais(X[:,:, janela], y[:, janela], perc_treino, perc_val)
 
@@ -457,12 +464,14 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
 
                         new_position = new_velocity .+ multi_swarm_vector[i_sub_swarm, i_particle, :]
                         
+                        
                     else
                         # atualiza como QSO
                         dist = sqrt(sum((multi_swarm_vector[i_sub_swarm, i_particle, :] .- gbest).^2))
-                        normal = rand(Normal(0, 1), n)
-                        uniform = rand(n)
+                        normal = rand(Normal(0, 1), dim)
+                        uniform = rand(dim)
                         left_size_form = rcloud .* normal
+                        
                         
                         if dist == 0
                             break
@@ -476,13 +485,14 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
                     end
                         
                     # handling boundary violations 
-                    for i in eachindex(new_position)
-                        if new_position[i]<LB[i] 
-                            new_position[i]=LB[i] 
-                        elseif new_position[i]>UB[i] 
-                            new_position[i]=UB[i] 
-                        end 
+                    for j in 1:dim
+                        if new_position[j]<LB[j] 
+                            new_position[j]=LB[j] 
+                        elseif new_position[j]>UB[j] 
+                            new_position[j]=UB[j] 
+                        end
                     end 
+
                     
                     multi_swarm_vector[i_sub_swarm, i_particle, :] = copy(new_position)
 
@@ -498,25 +508,31 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
                 
             end
 
-        # treinamento mse
-        modelo_iter = fit!(SVR(kernel = "rbf", C = gbest[1], epsilon = gbest[2], gamma = gbest[3]), X_tv, Y_tv)
+            # treinamento mse
+            modelo_iter = fit!(SVR(kernel = "rbf", C = gbest[1], epsilon = gbest[2], gamma = gbest[3]), X_tv, Y_tv)
 
-        pred_gbest_tv = predict(modelo_iter, X_tv)
-        mse_tv = compute_cost(pred_gbest_tv, Y_tv)
-        mse_treino[it_idx] = mse_tv
+            pred_gbest_tv = predict(modelo_iter, X_tv)
+            mse_tv = compute_cost(pred_gbest_tv, Y_tv)
+            mse_treino[it_idx] = mse_tv
+            
+#             println("MSE treinamento e validação: $mse_tv")
 
-        # validacao mse
-        pred_gbest_val = predict(modelo_iter, X_val)
-        mse_v = compute_cost(pred_gbest_val, Y_val)
-        mse_val[it_idx] = mse_v
+            # validacao mse
+            pred_gbest_val = predict(modelo_iter, X_val)
+            mse_v = compute_cost(pred_gbest_val, Y_val)
+            mse_val[it_idx] = mse_v
+            
+#             println("MSE validação:               $mse_v")
 
-        # teste
-        pred_gbest_t = predict(modelo_iter, X_teste)
-        mse_t = compute_cost(pred_gbest_t, Y_teste)
-        mse_teste[it_idx] = mse_t
+            # teste
+            pred_gbest_t = predict(modelo_iter, X_teste)
+            mse_t = compute_cost(pred_gbest_t, Y_teste)
+            mse_teste[it_idx] = mse_t
+            
+#             println("MSE teste:                   $mse_tv")
 
-        it_idx += 1
-        iteration += 1
+            it_idx += 1
+            iteration += 1
         end
     end
                          
@@ -533,7 +549,7 @@ function svr_model_cqso(X, y, num_iteracoes::Int64, perc_treino::Float64, perc_v
     LB = [1, 1e-5, 1e-2]
     UB = [1000, 1e-3, 1]
     
-    mse_treino, mse_val, mse_teste = CQSO(X, y, qtd_particulas_dim, num_iteracoes, LB, UB, perc_treino, perc_val, neutral_p, rcloud)
+    mse_treino, mse_val, mse_teste = CQSO(X, y, 50, num_iteracoes, LB, UB, perc_treino, perc_val, neutral_p, rcloud)
         
     return mse_treino, mse_val, mse_teste
 end
