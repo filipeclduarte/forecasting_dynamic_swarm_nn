@@ -343,7 +343,7 @@ function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_c
 
     resultados = [te_medio, te_std, ge_medio, ge_std, gf_medio, gf_std]
 
-    return resultados, te, ge
+    return resultados, mse_treino_cenarios, mse_teste_cenarios
 
 end  
 
@@ -615,7 +615,6 @@ function run_model_save_output(X, y, w, s, f, experimento, algoritmo, dataset, c
         dados_resultados, dados_resultados_mse_treino, dados_resultados_mse_teste = avaliacao_resultados(dados_mse_treino, dados_mse_val, dados_mse_teste, f, quantidade_janelas, 3)
 
     end
-
 
     output1 = "resultados/svr_$(dataset)_resultados_$(experimento)_$(algoritmo)_$(cenario).csv"
     output2 = "resultados/svr_$(dataset)_resultados_mse_treino_$(experimento)_$(algoritmo)_$(cenario).csv"
