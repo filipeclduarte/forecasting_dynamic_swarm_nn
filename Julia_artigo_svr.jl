@@ -319,9 +319,9 @@ function avaliacao_resultados(mse_treino_cenarios, mse_val_cenarios, mse_teste_c
             
     qtd_iteracoes = size(mse_treino_cenarios)[2]
     
-    te = sum(mse_treino_cenarios, dims = 1)./qtd_iteracoes
+    te = sum(mse_treino_cenarios, dims = 2)./qtd_iteracoes
     
-    ge = sum(mse_teste_cenarios, dims = 1)./qtd_iteracoes
+    ge = sum(mse_teste_cenarios, dims = 2)./qtd_iteracoes
 
     gf = ge./te
 
