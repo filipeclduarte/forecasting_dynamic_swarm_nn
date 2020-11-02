@@ -501,7 +501,7 @@ function CQSO(X, y, params, n_particles::Int64, max_iter::Int64, LB::Float64, UB
     # compute pbest value
     pbest_value = copy(gbest_value)
     # copiando os parametros iniciais do sub_swarm_pbest
-    parametros_gbest = parametros
+    parametros_gbest = copy(sub_swarm_pbest)
 
 
 
