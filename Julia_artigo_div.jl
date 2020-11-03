@@ -201,14 +201,14 @@ function PSO(X, y, params, n_particles::Int64, max_iter::Int64, LB::Float64, UB:
 
             for i in 1:n_particles
                 for j in 1:n_particles
-                    @inbounds velocity[i, j] = w*velocity[i,j] + c1*rand()*(pbest[i,j] - particles[i,j]) + c2*rand()*(gbest[j] - particles[i,j])
+                    velocity[i, j] = w*velocity[i,j] + c1*rand()*(pbest[i,j] - particles[i,j]) + c2*rand()*(gbest[j] - particles[i,j])
                 end
             end
 
             # update pso position
             for i in 1:n_particles
                 for j in 1:n_particles
-                    @inbounds particles[i,j] = particles[i,j] + velocity[i,j]
+                    particles[i,j] = particles[i,j] + velocity[i,j]
                 end
             end
 
@@ -227,21 +227,21 @@ function PSO(X, y, params, n_particles::Int64, max_iter::Int64, LB::Float64, UB:
             for i in 1:n_particles
                 parametros = params_reshape(particles[i,:], params)
                 y_pred = forward_prop(X_treino', parametros)
-                @inbounds fitness_value[i] = compute_cost(y_pred, Y_treino')
+                fitness_value[i] = compute_cost(y_pred, Y_treino')
             end
 
             # updating pbest and fitness
             for i in 1:n_particles
                 parametros_pbest = params_reshape(pbest[i, :], params)
                 y_pred_pbest = forward_prop(X_treino', parametros_pbest)
-                @inbounds if fitness_value[i] < compute_cost(y_pred_pbest, Y_treino')
-                    @inbounds pbest[i] = particles[i]
+                if fitness_value[i] < compute_cost(y_pred_pbest, Y_treino')
+                    pbest[i] = particles[i]
                 end
             end
 
             # updating gbest 
             for i in 1:n_particles    
-                @inbounds if fitness_value[i] < gbest_value
+                if fitness_value[i] < gbest_value
                     gbest_value = fitness_value[i]
                     gbest = particles[i,:]
                 end
@@ -472,7 +472,7 @@ function CQSO(X, y, params, n_particles::Int64, max_iter::Int64, LB::Float64, UB
     # multi_swarm_vector = zeros(n_sub_swarms, n_particles, n)
     velocity_vector = zeros(n_sub_swarms, n_particles, n)
     
-    @inbounds for i_subswarm in 1:n_sub_swarms
+    for i_subswarm in 1:n_sub_swarms
         context_vector[i_subswarm, :] = rand(Uniform(-1.0, 1.0), n)
         for i_particle in 1:n_particles
             multi_swarm_vector[i_subswarm, i_particle, :] = rand(Uniform(-1.0, 1.0), n)
@@ -501,7 +501,7 @@ function CQSO(X, y, params, n_particles::Int64, max_iter::Int64, LB::Float64, UB
     # compute pbest value
     pbest_value = copy(gbest_value)
     # copiando os parametros iniciais do sub_swarm_pbest
-    parametros_gbest = copy(sub_swarm_pbest)
+    parametros_gbest = context_vector[1,:]
 
 
 

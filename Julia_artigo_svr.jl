@@ -145,7 +145,7 @@ function PSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Flo
         for k in 1:max_iter
             w=wmax-(wmax-wmin)*k/max_iter
         
-            @inbounds for i in 1:n_particles
+            for i in 1:n_particles
                 for j in 1:dim
                     velocity[i, j] = w*velocity[i,j] + c1*rand() * (pbest[i,j] - particles[i,j]) + c2*rand() * (gbest[j] - particles[i,j])
                     particles[i,j] = particles[i,j] + velocity[i,j]
@@ -384,14 +384,14 @@ function CQSO(X, y, n_particles::Int64, max_iter::Int64, LB, UB, perc_treino::Fl
         end
     end
 
-    context_vector = Array{Float64, 2}(undef, n_sub_swarms, n)
+    context_vector = Array{Float64, 2}(undef, n_sub_swarms, dim)
 
     # Create a multiswarm and his velocities
     multi_swarm_vector = Array{Float64, 3}(undef, n_sub_swarms, n , dim)
     # multi_swarm_vector = zeros(n_sub_swarms, n, dim)
     velocity_vector = zeros(n_sub_swarms, n, dim)
     
-    @inbounds for i_subswarm in 1:n_sub_swarms  
+    for i_subswarm in 1:n_sub_swarms  
         for i_particle in 1:n_particles
             for j_particle in 1:dim
                 context_vector[i_subswarm, j_particle] = rand(Uniform(LB[j_particle], UB[j_particle]))
